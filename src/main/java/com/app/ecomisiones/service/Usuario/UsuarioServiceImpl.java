@@ -1,0 +1,57 @@
+package com.app.ecomisiones.service.Usuario;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.app.ecomisiones.model.Usuario;
+import com.app.ecomisiones.repository.UsuarioRepository;
+import com.app.ecomisiones.service.CrudService;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Override
+    public Usuario guardar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public Optional<Usuario> buscarPorId(Integer id) {
+        return usuarioRepository.findById(id)
+                .filter(Usuario::esInactivo); // Solo devuelve usuarios activos
+    }
+
+    @Override
+    public List<Usuario> obtenerTodo() {
+        return usuarioRepository.findAll(); // Solo devuelve usuarios activos
+    }
+
+    @Override
+    public Usuario modificar(Usuario usuario) {
+        // Otros campos actualizables
+        return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public void borrar(Usuario usuario) {
+        usuarioRepository.delete(usuario);
+    }
+
+    @Override
+    public boolean existePorId(Integer id) {
+        return usuarioRepository.existsById(id) &&
+               buscarPorId(id).isPresent(); // Solo cuenta usuarios activos
+    }
+
+    @Override
+    // Método que busca un usuario por correo y contraseña
+    public Optional<Usuario> iniciarSesion(String correo, String password) {
+        return usuarioRepository.findByCorreoAndPassword(correo, password);
+    } 
+}
