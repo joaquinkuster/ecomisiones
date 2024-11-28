@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "categorias")
@@ -16,22 +17,24 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 500)
+    @Column(name = "descripcion", nullable = false, length = 500)
     private String descripcion;
 
-    @OneToMany(mappedBy = "padre")
-    private List<Categoria> subcategorias;
+    @OneToMany(mappedBy = "padre", cascade = CascadeType.ALL)
+    private Set<Categoria> subcategorias = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "id_padre", nullable = true)
+    private Categoria padre;
 
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
-
-    @ManyToOne
-    private Categoria padre;
 
     public Categoria(String nombre, String descripcion) {
         this.nombre = nombre;

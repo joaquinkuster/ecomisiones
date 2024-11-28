@@ -13,9 +13,10 @@ public class Imagen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "imagen")
+    @Column(name = "imagen", nullable = false)
     private byte[] imagen;
 
     @ManyToOne

@@ -1,6 +1,7 @@
 package com.app.ecomisiones.service.Usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.ecomisiones.model.Usuario;
@@ -16,8 +17,16 @@ public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired 
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Usuario guardar(Usuario usuario) {
+        if (usuarioRepository.findByCorreo(usuario.getCorreo()).isPresent()) {
+            throw new RuntimeException("El usuario con este email ya está registrado");
+        }
+        // Cifrar la contraseña antes de guardar
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
@@ -52,6 +61,12 @@ public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
     @Override
     // Método que busca un usuario por correo y contraseña
     public Optional<Usuario> iniciarSesion(String correo, String password) {
-        return usuarioRepository.findByCorreoAndPassword(correo, password);
+        Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
+        if(usuario.isPresent()){
+            if(passwordEncoder.matches(password, usuario.get().getPassword())){
+                return usuario;
+            }
+        }
+        throw new RuntimeException("Usuario o contraseña incorrectos");
     } 
 }

@@ -1,34 +1,25 @@
 package com.app.ecomisiones.controller;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.app.ecomisiones.model.Usuario;
-import com.app.ecomisiones.service.Usuario.UsuarioServiceImpl;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
 
-    @Autowired
-    @Lazy
-    private UsuarioServiceImpl usuarioService;
-
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String login() {
         return "login"; // nombre del archivo HTML (login.html)
     }
 
-    @PostMapping("/login")
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("usuario");
+        return "login";
+    }
+
+    /* @PostMapping("/login")
     public String login(
             @RequestParam("correo") String correo, 
             @RequestParam("password") String password, 
@@ -52,5 +43,5 @@ public class LoginController {
             model.addAttribute("error", "Correo o contraseña incorrectos.");
             return "login";
         }
-    }
+    } */
 }
