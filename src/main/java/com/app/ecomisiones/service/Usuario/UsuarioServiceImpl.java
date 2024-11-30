@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
+public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario> {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -33,7 +33,7 @@ public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
     @Override
     public Optional<Usuario> buscarPorId(Integer id) {
         return usuarioRepository.findById(id)
-                .filter(Usuario::esInactivo); // Solo devuelve usuarios activos
+                .filter(usuario -> !usuario.esInactivo()); // Solo devuelve usuarios activos
     }
 
     @Override
@@ -55,18 +55,6 @@ public class UsuarioServiceImpl implements UsuarioService, CrudService<Usuario>{
     @Override
     public boolean existePorId(Integer id) {
         return usuarioRepository.existsById(id) &&
-               buscarPorId(id).isPresent(); // Solo cuenta usuarios activos
+                buscarPorId(id).isPresent(); // Solo cuenta usuarios activos
     }
-
-    @Override
-    // Método que busca un usuario por correo y contraseña
-    public Optional<Usuario> iniciarSesion(String correo, String password) {
-        Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
-        if(usuario.isPresent()){
-            if(passwordEncoder.matches(password, usuario.get().getPassword())){
-                return usuario;
-            }
-        }
-        throw new RuntimeException("Usuario o contraseña incorrectos");
-    } 
 }

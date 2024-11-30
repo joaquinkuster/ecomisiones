@@ -28,7 +28,7 @@ public class Producto {
     private String descripcion;
 
     @Column(name = "precio", nullable = false)
-    private double precio;
+    private float precio;
 
     @Column(name = "descuento", nullable = false)
     private float descuento;
@@ -44,16 +44,26 @@ public class Producto {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
-    private Set<Imagen> imagenes = new HashSet<>();
-
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Producto(String nombre){
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private Set<Imagen> imagenes = new HashSet<>();
+
+    public Producto(String nombre, String descripcion, float precio, float descuento, int stock, Usuario vendedor, Categoria categoria){
         this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.descuento = descuento;
+        this.stock = stock;
+        this.vendedor = vendedor;
+        this.categoria = categoria;
     }
 
+    public void marcarInactivo(){
+        baja = true;
+    }
+    
     public boolean esInactivo() {
         return baja;
     }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoriaServiceImpl implements CategoriaService, CrudService<Categoria>{
+public class CategoriaServiceImpl implements CategoriaService, CrudService<Categoria> {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -24,7 +24,7 @@ public class CategoriaServiceImpl implements CategoriaService, CrudService<Categ
     @Override
     public Optional<Categoria> buscarPorId(Integer id) {
         return categoriaRepository.findById(id)
-                .filter(Categoria::esInactivo); // Solo devuelve categorias activas
+                .filter(categoria -> !categoria.esInactivo()); // Solo devuelve categorias activas
     }
 
     @Override
@@ -46,6 +46,6 @@ public class CategoriaServiceImpl implements CategoriaService, CrudService<Categ
     @Override
     public boolean existePorId(Integer id) {
         return categoriaRepository.existsById(id) &&
-               buscarPorId(id).isPresent(); // Solo cuenta usuarios activos
+                buscarPorId(id).isPresent(); // Solo cuenta usuarios activos
     }
 }

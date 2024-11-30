@@ -1,5 +1,7 @@
 package com.app.ecomisiones.model;
 
+import java.io.ByteArrayInputStream;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +28,17 @@ public class Imagen {
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Imagen(byte[] imagen) {
+    public Imagen(byte[] imagen, Producto producto) {
         this.imagen = imagen;
+        this.producto = producto;
+    }
+
+    public boolean esInactivo() {
+        return baja;
+    }
+
+    @Override
+    public String toString(){
+        return imagen.toString();
     }
 }

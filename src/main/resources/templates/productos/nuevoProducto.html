@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Publicar Producto</h1>
-        <form th:action="@{/productos/guardar}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/productos/crear}" method="post" enctype="multipart/form-data">
             <!-- Nombre -->
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre del Producto</label>
@@ -52,7 +52,7 @@
             <!-- Subir Imágenes -->
             <div class="mb-3">
                 <label for="imagenes" class="form-label">Subir Imágenes</label>
-                <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*" multiple required>
+                <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png" multiple required>
             </div>
 
             <!-- Botón Enviar -->

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+    <div class="container mt-5">
+        <div class="row text-center">
+            <div class="col">
+                <h2>Gestión de Sistema</h2>
+                <p>Seleccione una opción para gestionar:</p>
+                <!-- Botones para gestionar categorías, productos y usuarios -->
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <a th-href="#" class="btn btn-primary" th:href="@{/gestion/categorias}">Gestionar Categorías</a>
+                    <a th:href="@{/admin/productos}" class="btn btn-success">Gestionar Productos</a>
+                    <a th-href="#" class="btn btn-warning" th:href="@{/gestion/usuarios}">Gestionar Usuarios</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

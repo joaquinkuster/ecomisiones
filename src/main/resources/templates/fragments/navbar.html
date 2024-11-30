@@ -1,0 +1,61 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/inicio}">EcoMisiones</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/inicio}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Acerca de</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Buscador -->
+                    <form class="d-flex" th:action="@{/buscar}" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Buscar productos" name="query"
+                            aria-label="Buscar">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+            <!-- Select de categorías -->
+            <div class="d-flex">
+                <select class="form-select me-2" aria-label="Seleccionar categoría">
+                    <option selected>Categorías</option>
+                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+                        th:text="${categoria.nombre}"></option>
+                </select>
+                <!-- Botones de inicio de sesión y carrito -->
+                <!-- Enlaces del usuario -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Hola, <span th:text="${usuario.nombre}">Usuario</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <!-- Opción para Administrador -->
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
+                            <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+                        </li>
+
+                        <!-- Opción para Usuario -->
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
+                            <a th:href="@{/productos/crear}" class="dropdown-item">Vender</a>
+                        </li>
+
+                        <!-- Enlace para cerrar sesión -->
+                        <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+                <a class="btn btn-outline-success" href="#" role="button">Mi carrito</a>
+            </div>
+        </div>
+    </div>
+</nav>
