@@ -1,7 +1,5 @@
 package com.app.ecomisiones.model;
 
-import java.io.ByteArrayInputStream;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

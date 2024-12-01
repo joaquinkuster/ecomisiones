@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carrito de Compras</title>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    <div th:if="${carrito != null}">
+        <ul>
+            <li th:each="producto : ${carrito.productos}">
+                <span th:text="${producto.nombre}"></span>
+                <span th:text="${producto.precio}"></span>
+                <form th:action="@{/carrito/eliminar/{carritoId}/{productoId}(carritoId=${carrito.id}, productoId=${producto.id})}" method="post">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
+        </ul>
+        <div>
+            <h3>Total: <span th:text="${carrito.total}"></span></h3>
+            <form th:action="@{/carrito/comprar/{carritoId}(carritoId=${carrito.id})}" method="post">
+                <button type="submit">Comprar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
