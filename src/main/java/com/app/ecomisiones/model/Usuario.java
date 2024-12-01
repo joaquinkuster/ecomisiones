@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,9 +49,12 @@ public class Usuario implements UserDetails{
     @OneToOne(mappedBy = "usuario")
     private Carrito carrito;
 
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal", nullable =  true)
+    private Sucursal sucursalMasCercana;
+
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
-
 
     public Usuario(String nombre, String apellido, String correo, String telefono, String password){
         this.nombre = nombre;

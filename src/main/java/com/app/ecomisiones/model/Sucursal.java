@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "direcciones")
+@Table(name = "sucursales")
 @Getter @Setter
 @NoArgsConstructor
-public class Direccion {
+public class Sucursal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,26 +19,15 @@ public class Direccion {
     @Column(name = "direccion", nullable = false, length = 150)
     private String direccion;
 
-    @Column(name = "postal", nullable = false)
-    private int postal;
-
-    @Column(name = "depto", nullable = true)
-    private int depto;
-
-    @Column(name = "predeterminado", nullable = false)
-    private boolean predeterminado;
-
     @ManyToOne
     @JoinColumn(name = "id_ciudad", nullable =  false)
     private Ciudad ciudad;
-    
+
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Direccion(String direccion, int postal, int depto, Ciudad ciudad) {
+    public Sucursal(String direccion, Ciudad ciudad) {
         this.direccion = direccion;
-        this.postal = postal;
-        this.depto = depto;
         this.ciudad = ciudad;
     }
 
@@ -52,6 +41,6 @@ public class Direccion {
 
     @Override
     public String toString(){
-        return direccion + " " + ciudad + ", " + ciudad.getProvincia();
+        return direccion + " (" + ciudad + ", " + ciudad.getProvincia() + ")";
     }
 }

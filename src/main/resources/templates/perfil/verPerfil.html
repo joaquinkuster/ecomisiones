@@ -48,8 +48,18 @@
                         placeholder="+54 9 11 1234-5678">
                 </div>
 
+                <!-- Categoría -->
+                <div class="mb-3">
+                    <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
+                    <select class="form-select" id="sucursal" name="sucursal">
+                        <option value="" disabled selected>Seleccione una sucursal</option>
+                        <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}" th:text="${sucursal}">
+                        </option>
+                    </select>
+                </div>
+
                 <!-- Botón de Actualizar -->
-                <button type="submit" class="btn btn-indigo w-100 py-2 mt-3">Actualizar</button>
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Actualizar</button>
 
             </form>
 
@@ -59,8 +69,8 @@
             </a>
 
             <!-- Enlace para agregar dirección -->
-            <a th:href="@{/usuario/direccion/{id}(id=${usuario.id})}" class="btn btn-success w-100 py-2 mt-3">
-                Agregar Dirección
+            <a th:href="@{/direcciones/ver}" class="btn btn-success w-100 py-2 mt-3">
+                Gestionar Direcciones
             </a>
 
             <!-- Enlace para agregar método de pago -->

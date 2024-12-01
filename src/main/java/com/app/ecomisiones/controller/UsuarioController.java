@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.app.ecomisiones.model.Carrito;
 import com.app.ecomisiones.model.Categoria;
+import com.app.ecomisiones.model.Sucursal;
 import com.app.ecomisiones.model.Usuario;
 import com.app.ecomisiones.service.Carrito.CarritoServiceImpl;
 import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
+import com.app.ecomisiones.service.Sucursal.SucursalServiceImpl;
 import com.app.ecomisiones.service.Usuario.UsuarioServiceImpl;
 
 import jakarta.validation.Valid;
@@ -34,6 +35,9 @@ public class UsuarioController {
 
     @Autowired
     private  CarritoServiceImpl carritoService;
+
+    @Autowired
+    private SucursalServiceImpl sucursalService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -72,8 +76,10 @@ public class UsuarioController {
             Authentication auth) {
 
         List<Categoria> categorias = categoriaService.obtenerTodo();
+        List<Sucursal> sucursales = sucursalService.obtenerTodo();
 
         modelo.addAttribute("categorias", categorias);
+        modelo.addAttribute("sucursales", sucursales);
         modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
 
         return "perfil/verPerfil";
@@ -85,7 +91,8 @@ public class UsuarioController {
             @RequestParam(name = "nombre") String nombre,
             @RequestParam(name = "apellido") String apellido,
             @RequestParam(name = "correo") String correo,
-            @RequestParam(name = "telefono", required = false) String telefono) {
+            @RequestParam(name = "telefono", required = false) String telefono,
+            @RequestParam(name = "sucrusal", required = false) Integer idSucursal) {
         try {
 
             Usuario usuario = usuarioService.buscarPorId(id).orElse(null);
@@ -97,7 +104,14 @@ public class UsuarioController {
             usuario.setNombre(nombre);
             usuario.setApellido(apellido);
             usuario.setCorreo(correo);
-            usuario.setTelefono(telefono);
+            
+            if (telefono != null) {
+                usuario.setTelefono(telefono);
+            }
+
+            if (idSucursal != null) {
+                usuario.setSucursalMasCercana(sucursalService.buscarPorId(idSucursal).orElse(null));
+            }
 
             usuario = usuarioService.modificar(usuario);
 

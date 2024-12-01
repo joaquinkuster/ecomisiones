@@ -30,7 +30,7 @@ public class Orden {
 
     @ManyToOne
     @JoinColumn(name = "id_direccion")
-    private Direccion direccion;
+    private Sucursal direccion;
 
     @ManyToOne
     @JoinColumn(name = "id_comprador", nullable = false)
@@ -43,7 +43,7 @@ public class Orden {
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL)
     private List<DetalleOrden> detalles;
 
-    public Orden(MedioDePago medioDePago, Direccion direccion, Usuario comprador, Usuario vendedor) {
+    public Orden(MedioDePago medioDePago, Sucursal direccion, Usuario comprador, Usuario vendedor) {
         this.medioDePago = medioDePago; 
         this.direccion = direccion;
         this.comprador = comprador;
