@@ -30,7 +30,7 @@ public class ProductoServiceImpl implements ProductoService, CrudService<Product
 
     @Override
     public List<Producto> obtenerTodo() {
-        return productoRepository.findAll(); // Solo devuelve categorias activas
+        return productoRepository.findByBajaFalse(); // Solo devuelve categorias activas
     }
 
     @Override
@@ -53,7 +53,6 @@ public class ProductoServiceImpl implements ProductoService, CrudService<Product
 
     @Override
     public List<Producto> buscarPorCategoria(Categoria categoria) {
-        // TODO Auto-generated method stub
-        return productoRepository.findByCategoria(categoria);
+        return productoRepository.findByCategoriaAndBajaFalse(categoria); // Solo devuelve categorias activas
     }
 }

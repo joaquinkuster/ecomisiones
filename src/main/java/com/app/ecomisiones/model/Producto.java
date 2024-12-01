@@ -68,6 +68,10 @@ public class Producto {
         return baja;
     }
 
+    public float getPrecioConDescuento(){
+        return precio * (1 - descuento/100);
+    }
+
     @Override
     public String toString() {
         return nombre;

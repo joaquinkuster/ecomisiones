@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.app.ecomisiones.model.Categoria;
+
+import com.app.ecomisiones.model.DetalleCarrito;
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
-    List<Categoria> findByBajaFalse();
+public interface DetalleCarritoRepository extends JpaRepository<DetalleCarrito, Integer> {
+    List<DetalleCarrito> findByBajaFalse();
 }

@@ -40,6 +40,9 @@
                         Hola, <span th:text="${usuario.nombre}">Usuario</span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                        <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+
                         <!-- Opción para Administrador -->
                         <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
                             <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
@@ -54,7 +57,7 @@
                         <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
                     </ul>
                 </div>
-                <a class="btn btn-outline-success" href="#" role="button">Mi carrito</a>
+                <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito</a>
             </div>
         </div>
     </div>

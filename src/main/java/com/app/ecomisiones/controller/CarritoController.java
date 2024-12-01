@@ -1,64 +1,151 @@
 package com.app.ecomisiones.controller;
 
-import com.app.ecomisiones.model.Carrito;
 import com.app.ecomisiones.model.Categoria;
+import com.app.ecomisiones.model.DetalleCarrito;
 import com.app.ecomisiones.model.Producto;
-
-import com.app.ecomisiones.service.Carrito.CarritoService;
-import com.app.ecomisiones.service.Producto.ProductoService;
+import com.app.ecomisiones.model.Usuario;
+import com.app.ecomisiones.service.Carrito.CarritoServiceImpl;
+import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
+import com.app.ecomisiones.service.DetalleCarrito.DetalleCarritoServiceImpl;
+import com.app.ecomisiones.service.Producto.ProductoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
+import java.util.Set;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/carrito")
 public class CarritoController {
 
     @Autowired
-    private CarritoService carritoService;
+    private DetalleCarritoServiceImpl detalleCarritoService;
 
     @Autowired
-    private ProductoService productoService;
+    private ProductoServiceImpl productoService;
+
+    @Autowired
+    private CategoriaServiceImpl categoriaService;
+
+    @Autowired
+    private CarritoServiceImpl carritoService;
 
     // Método para mostrar el carrito de compras
-    @GetMapping("/{usuarioId}")
-    public String verCarrito(@PathVariable Long usuarioId, Model model) {
-        Carrito carrito = carritoService.obtenerCarrito(usuarioId);
-        model.addAttribute("carrito", carrito);
-        return "carrito/verCarrito";
+    @GetMapping("/ver")
+    public String ver(Model model, Authentication auth) {
+        try {
+
+            Usuario usuario = (Usuario) auth.getPrincipal();
+            List<Categoria> categorias = categoriaService.obtenerTodo();
+
+            if (usuario == null) {
+                throw new IllegalArgumentException("Error! El usuario ingresado no existe.");
+            }
+
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("categorias", categorias);
+            model.addAttribute("carrito", usuario.getCarrito());
+
+            return "carrito";
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            return "inicio";
+
+        }
     }
 
-    // Método para agregar un producto al carrito
-    @PostMapping("/agregar/{carritoId}/{productoId}")
-    public String agregarProductoAlCarrito(@PathVariable Long carritoId, @PathVariable Integer productoId) {
-        carritoService.agregarProductoAlCarrito(carritoId, productoId);
-        return "redirect:/carrito/" + carritoId;
+    @PostMapping("/agregar/{id}")
+    public String agregar(@PathVariable int id,
+            @RequestParam(name = "cantidad", required = false) int cantidad,
+            Authentication auth,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Usuario usuario = (Usuario) auth.getPrincipal();
+            Producto producto = productoService.buscarPorId(id).orElse(null);
+
+            if (usuario == null || producto == null) {
+                throw new IllegalArgumentException("Error! El usuario o el producto ingresado no existe.");
+            }
+
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("Error! La cantidad ingresada es inválida.");
+            }
+
+            if (cantidad > producto.getStock()) {
+                throw new IllegalArgumentException("No hay suficiente stock disponible.");
+            }
+
+            // Agregar producto al carrito
+            DetalleCarrito detalle = new DetalleCarrito(cantidad, producto, usuario.getCarrito());
+            detalleCarritoService.guardar(detalle);
+            usuario.getCarrito().agregarDetalle(detalle);
+
+            // Actualizar stock del producto
+            producto.setStock(producto.getStock() - cantidad);
+            productoService.modificar(producto);
+
+            redirectAttributes.addFlashAttribute("mensaje", "Producto agregado al carrito correctamente.");
+
+            usuario.getCarrito().calcularTotal();
+            carritoService.modificar(usuario.getCarrito());
+            // usuario.setCarrito(carritoService.buscarPorUsuario(usuario));
+
+            return "redirect:/productos/" + id;
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
+        }
     }
 
-    // Método para eliminar un producto del carrito
-    @PostMapping("/eliminar/{carritoId}/{productoId}")
-    public String eliminarProductoDelCarrito(@PathVariable Long carritoId, @PathVariable Integer productoId) {
-        carritoService.eliminarProductoDelCarrito(carritoId, productoId);
-        return "redirect:/carrito/" + carritoId;
+    @PostMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable int id,
+            @RequestParam(name = "vista", required = false) String vista,
+            Authentication auth,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Usuario usuario = (Usuario) auth.getPrincipal();
+            Producto producto = productoService.buscarPorId(id).orElse(null);
+
+            if (usuario == null || producto == null) {
+                throw new IllegalArgumentException("Error! El usuario o el producto ingresado no existe.");
+            }
+
+            Set<DetalleCarrito> detalles = usuario.getCarrito().getDetalles();
+
+            for (DetalleCarrito detalle : detalles) {
+                if (detalle.getProducto().getId() == producto.getId()) {
+                    // Si el producto ya está en el carrito, lo eliminamos
+                    detalle.marcarInactivo();
+                    producto.setStock(producto.getStock() + detalle.getCantidad());
+                    productoService.modificar(producto);
+                    detalleCarritoService.borrar(detalle);
+                    redirectAttributes.addFlashAttribute("mensaje", "Producto eliminado del carrito correctamente.");
+                    break;
+                }
+            }
+
+            usuario.getCarrito().calcularTotal();
+            carritoService.modificar(usuario.getCarrito());
+            // usuario.setCarrito(carritoService.buscarPorUsuario(usuario));
+
+            return vista == null || !vista.equalsIgnoreCase("carrito")
+                    ? "redirect:/productos/" + id
+                    : "redirect:/carrito/ver";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
+        }
     }
 
-    // Método para procesar la compra y generar la orden de compra
-    @PostMapping("/procesar/{carritoId}")
-    public String procesarCompra(@PathVariable Long carritoId) {
-        carritoService.procesarCompra(carritoId);
-        return "redirect:/carrito/" + carritoId;
-    }
-
-    // Método para filtrar productos por categoría
-    @GetMapping("/productos/categoria/{categoriaId}")
-    public String buscarProductosPorCategoria(@PathVariable Long categoriaId, Model model) {
-        Categoria categoria = new Categoria(); // Aquí deberías obtener la categoría por su ID
-        categoria.setId(categoriaId); // Asumiendo que la categoría tiene un método para establecer el ID
-        List<Producto> productos = productoService.buscarPorCategoria(categoria);
-        model.addAttribute("productos", productos);
-        return "producto/listaProductos";
-    }
 }

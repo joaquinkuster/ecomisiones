@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ecomisiones.config.SecurityConfig;
-import com.app.ecomisiones.model.Categoria;
-import com.app.ecomisiones.model.Imagen;
-import com.app.ecomisiones.model.Producto;
-import com.app.ecomisiones.model.Usuario;
+import com.app.ecomisiones.model.*;
 import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
 import com.app.ecomisiones.service.Imagen.ImagenServiceImpl;
 import com.app.ecomisiones.service.Producto.ProductoServiceImpl;
@@ -23,6 +20,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Clase controlador para los productos en ecomarket.
@@ -50,6 +48,7 @@ public class ProductoController {
     @GetMapping("productos/{id}")
     public String verProducto(@PathVariable int id, Model modelo, Authentication auth) {
 
+        Usuario usuario = (Usuario) auth.getPrincipal();
         Producto producto = productoService.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
         List<Producto> productosRelacionados = productoService.buscarPorCategoria(producto.getCategoria());
@@ -70,11 +69,22 @@ public class ProductoController {
             relacionadosConImagenes.put(relacionado, imgSecundarias);
         }
 
+        Set<DetalleCarrito> detalles = usuario.getCarrito().getDetalles();
+        boolean estaEnCarrito = false;
+        if (!detalles.isEmpty()) {
+            for (DetalleCarrito detalle : detalles) {
+                if (detalle.getProducto().getId() == producto.getId()){
+                    estaEnCarrito = true;
+                }
+            }
+        }
+
         modelo.addAttribute("producto", producto);
+        modelo.addAttribute("estaEnCarrito", estaEnCarrito);
         modelo.addAttribute("imagenes", imgPrincipales);
         modelo.addAttribute("productosRelacionados", relacionadosConImagenes);
         modelo.addAttribute("categorias", categorias);
-        modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+        modelo.addAttribute("usuario", usuario);
         return "vistaProducto";
     }
 
@@ -86,7 +96,7 @@ public class ProductoController {
         modelo.addAttribute("productos", productos);
         modelo.addAttribute("categorias", categorias);
         modelo.addAttribute("usuarios", usuarios);
-        modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+        modelo.addAttribute("usuario", usuarios);
         return "/admin/productos";
     }
 

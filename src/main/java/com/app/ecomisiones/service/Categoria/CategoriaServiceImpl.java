@@ -29,7 +29,7 @@ public class CategoriaServiceImpl implements CategoriaService, CrudService<Categ
 
     @Override
     public List<Categoria> obtenerTodo() {
-        return categoriaRepository.findAll(); // Solo devuelve categorias activas
+        return categoriaRepository.findByBajaFalse(); // Solo devuelve categorias activas
     }
 
     @Override

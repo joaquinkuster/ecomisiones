@@ -1,53 +1,66 @@
 package com.app.ecomisiones.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "carritos")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Carrito {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @ManyToOne
+    @Column(name = "total", nullable = false)
+    private double total = 0;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
 
-    @ManyToMany
-    private List<Producto> productos;
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Setter(AccessLevel.NONE) // Desactiva el setter para este atributo
+    private Set<DetalleCarrito> detalles = new HashSet<>();
 
-    private double total;
+    @Column(name = "baja", nullable = false)
+    private Boolean baja = false;
 
-    // Getters y setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
+    public Carrito(Usuario usuario) {
         this.usuario = usuario;
     }
 
-    public List<Producto> getProductos() {
-        return productos;
+    public void marcarInactivo() {
+        baja = true;
     }
 
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
+    public void calcularTotal() {
+        total = 0;
+        Set<DetalleCarrito> activos = getDetalles();
+        for (DetalleCarrito detalle : activos) {
+            total += detalle.getCantidad() * detalle.getProducto().getPrecioConDescuento();
+        }
     }
 
-    public double getTotal() {
-        return total;
+    public boolean esInactivo() {
+        return baja;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
+    public Set<DetalleCarrito> getDetalles() {
+        return detalles.stream()
+                .filter(detalle -> !detalle.esInactivo())
+                .collect(Collectors.toSet());
+    }
+
+    public void agregarDetalle(DetalleCarrito detalle) {
+        detalles.add(detalle);
     }
 }

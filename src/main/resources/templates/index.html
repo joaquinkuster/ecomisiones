@@ -12,6 +12,10 @@
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
+    <div class="alert alert-warning" role="alert">
+        <p th:text="${mensaje}"></p>
+      </div>
+
     <!-- Sección de productos -->
     <div class="container mt-5">
         <h2 class="text-center mb-4">Productos destacados</h2>
@@ -28,7 +32,6 @@
                         <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
                         <p class="card-text" th:text="${producto.key.descripcion}">Descripción del producto</p>
                         <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
-                        <a href="#" class="btn btn-primary">Añadir al carrito</a>
                         <a th:href="@{/productos/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver Producto</a>
                     </div>
                 </div>

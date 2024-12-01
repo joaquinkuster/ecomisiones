@@ -31,6 +31,9 @@ public class Usuario implements UserDetails{
     @Column(name = "correo", nullable = false, unique = true, length = 150)
     private String correo;
 
+    @Column(name = "telefono", nullable = true, length = 50)
+    private String telefono;
+
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -41,14 +44,18 @@ public class Usuario implements UserDetails{
     @Column(name = "rol", nullable = false)
     private RolUsuario rol = RolUsuario.Usuario;
 
+    @OneToOne(mappedBy = "usuario")
+    private Carrito carrito;
+
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
 
-    public Usuario(String nombre, String apellido, String correo, String password){
+    public Usuario(String nombre, String apellido, String correo, String telefono, String password){
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+        this.telefono = telefono;
         this.password = password;
     }
 

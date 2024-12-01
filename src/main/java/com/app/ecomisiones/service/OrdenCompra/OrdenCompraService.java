@@ -11,7 +11,7 @@ public class OrdenCompraService {
     @Autowired
     private OrdenDeCompraRepository ordenDeCompraRepository;
 
-    public void guardarOrdenDeCompra(OrdenDeCompra ordenDeCompra) {
+    public void guardarOrdenDeCompra(Orden ordenDeCompra) {
         ordenDeCompraRepository.save(ordenDeCompra);
     }
 }

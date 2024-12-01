@@ -10,5 +10,6 @@ import com.app.ecomisiones.model.Producto;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
-    List<Producto> findByCategoria(Categoria categoria);
+    List<Producto> findByCategoriaAndBajaFalse(Categoria categoria);
+    List<Producto> findByBajaFalse();
 }
