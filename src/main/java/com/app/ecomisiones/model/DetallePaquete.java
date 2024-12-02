@@ -1,16 +1,23 @@
 package com.app.ecomisiones.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "detalles_orden")
+@Table(name = "detalles_paquete")
 @Getter @Setter
 @NoArgsConstructor
-public class DetalleOrden {
-
+public class DetallePaquete {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,8 +27,8 @@ public class DetalleOrden {
     private int cantidad;
 
     @ManyToOne
-    @JoinColumn(name = "id_orden", nullable =  false)
-    private Orden orden;
+    @JoinColumn(name = "id_paquete", nullable =  false)
+    private Paquete paquete;
 
     @ManyToOne
     @JoinColumn(name = "id_producto", nullable =  false)
@@ -30,9 +37,9 @@ public class DetalleOrden {
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public DetalleOrden(int cantidad, Orden orden, Producto producto) {
+    public DetallePaquete(int cantidad, Paquete paquete, Producto producto) {
         this.cantidad = cantidad;
-        this.orden = orden;
+        this.paquete = paquete;
         this.producto = producto;
     }
 
@@ -46,6 +53,7 @@ public class DetalleOrden {
 
     @Override
     public String toString(){
-        return orden + " ha agregado " + producto;
+        return paquete + " ha agregado " + producto;
     }
+
 }

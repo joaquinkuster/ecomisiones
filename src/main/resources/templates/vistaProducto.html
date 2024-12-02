@@ -68,19 +68,17 @@
                 </p>
 
                 <p>
-                    <strong>Vendedor: </strong>
-                    <span th:text="${producto.vendedor.nombre}"></span>
-                </p>
-                <p>
                     <strong>Categoría: </strong>
                     <span th:text="${producto.categoria.nombre}"></span>
                 </p>
 
                 <!-- Botón de Comprar Ahora -->
-                <a th:href="@{/productos/{id}(id=${producto.id})}" class="btn btn-primary me-2">Comprar Ahora</a>
+                <a href="#" class="btn btn-primary me-2"
+                    th:attr="onclick='comprarAhora(' + ${producto.id} + ')'">Comprar Ahora</a>
+
 
                 <form th:if="${!estaEnCarrito}" th:action="@{/carrito/agregar/{id}(id=${producto.id})}" method="post">
-                    
+
                     <!-- Incrementador de Unidades -->
                     <div class="d-flex align-items-center mb-3">
                         <label for="cantidad" class="form-label me-3">Cantidad:</label>
@@ -155,6 +153,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script>
         // Inicializar slider
+
+        function comprarAhora(productoId) {
+            // Obtiene el valor del input basado en el id dinámico
+            const cantidad = document.getElementById('cantidad').value;
+
+            // Redirige a la URL con los parámetros dinámicos
+            window.location.href = `/compra/ver/${productoId}/${cantidad}`;
+        }
+
         $(document).ready(function () {
             $('.slider').slick({
                 infinite: true,

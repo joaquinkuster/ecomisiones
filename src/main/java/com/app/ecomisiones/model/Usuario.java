@@ -42,16 +42,19 @@ public class Usuario implements UserDetails{
     @Column(name = "fechaCreacion", nullable = false)
     private LocalDate fechaCreacion = LocalDate.now();
 
+    @OneToOne(mappedBy = "usuario")
+    private Carrito carrito;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false)
     private RolUsuario rol = RolUsuario.Usuario;
 
-    @OneToOne(mappedBy = "usuario")
-    private Carrito carrito;
-
     @ManyToOne
     @JoinColumn(name = "id_sucursal", nullable =  true)
     private Sucursal sucursalMasCercana;
+
+    @OneToMany(mappedBy = "comprador", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Compra> compras = new HashSet<>();
 
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
@@ -102,5 +105,9 @@ public class Usuario implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void agregarCompra(Compra compra) {
+        compras.add(compra);
     }
 }

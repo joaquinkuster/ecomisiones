@@ -6,19 +6,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "guardados")
+@Table(name = "detalles_compra")
 @Getter @Setter
 @NoArgsConstructor
-public class Guardado {
+public class DetalleCompra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
+    @Column(name = "cantidad", nullable = false)
+    private int cantidad;
+
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable =  false)
-    private Usuario usuario;
+    @JoinColumn(name = "id_compra", nullable =  false)
+    private Compra compra;
 
     @ManyToOne
     @JoinColumn(name = "id_producto", nullable =  false)
@@ -27,8 +30,9 @@ public class Guardado {
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Guardado(Usuario usuario, Producto producto) {
-        this.usuario = usuario;
+    public DetalleCompra(int cantidad, Compra compra, Producto producto) {
+        this.cantidad = cantidad;
+        this.compra = compra;
         this.producto = producto;
     }
 
@@ -42,6 +46,6 @@ public class Guardado {
 
     @Override
     public String toString(){
-        return usuario + " ha guardado " + producto;
+        return compra + " ha agregado " + producto;
     }
 }

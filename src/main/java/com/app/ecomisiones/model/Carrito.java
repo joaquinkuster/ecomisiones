@@ -20,9 +20,6 @@ public class Carrito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "total", nullable = false)
-    private double total = 0;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
@@ -42,14 +39,6 @@ public class Carrito {
         baja = true;
     }
 
-    public void calcularTotal() {
-        total = 0;
-        Set<DetalleCarrito> activos = getDetalles();
-        for (DetalleCarrito detalle : activos) {
-            total += detalle.getCantidad() * detalle.getProducto().getPrecioConDescuento();
-        }
-    }
-
     public boolean esInactivo() {
         return baja;
     }
@@ -62,5 +51,18 @@ public class Carrito {
 
     public void agregarDetalle(DetalleCarrito detalle) {
         detalles.add(detalle);
+    }
+
+    public double calcularTotal() {
+        double total = 0;
+        Set<DetalleCarrito> activos = getDetalles();
+        for (DetalleCarrito detalle : activos) {
+            if (detalle.getMercaderia() instanceof Producto producto) {
+                total += detalle.getCantidad() * producto.getPrecioConDescuento();
+            } else if (detalle.getMercaderia() instanceof Paquete paquete) {
+                total += detalle.getCantidad() * paquete.calcularTotal();
+            }
+        }
+        return total;
     }
 }

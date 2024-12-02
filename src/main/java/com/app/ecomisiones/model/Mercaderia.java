@@ -1,25 +1,27 @@
 package com.app.ecomisiones.model;
 
-
-import java.util.HashSet;
-import java.util.Set;
-
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "categorias")
+@Table(name = "mercaderias")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter @Setter
 @NoArgsConstructor
-public class Categoria {
-
+public class Mercaderia {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Setter(AccessLevel.NONE)
     private int id;
 
     @Column(name = "nombre", nullable = false, length = 50)
@@ -28,27 +30,28 @@ public class Categoria {
     @Column(name = "descripcion", nullable = false, length = 500)
     private String descripcion;
 
-    @OneToMany(mappedBy = "padre", cascade = CascadeType.ALL)
-    private Set<Categoria> subcategorias = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "id_padre", nullable =  true)
-    private Categoria padre;
+    @Column(name = "descuento", nullable = false)
+    private float descuento;
 
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Categoria(String nombre, String descripcion) {
+    public Mercaderia(String nombre, String descripcion, float descuento) {
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.descuento = descuento;
     }
 
+    public void marcarInactivo(){
+        baja = true;
+    }
+    
     public boolean esInactivo() {
         return baja;
     }
 
     @Override
-    public String toString (){
+    public String toString() {
         return nombre;
     }
 }

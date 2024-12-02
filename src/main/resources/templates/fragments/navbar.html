@@ -43,6 +43,8 @@
 
                         <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
 
+                        <li><a th:href="@{/compra/misCompras}" class="dropdown-item">Mis Compras</a></li>
+
                         <!-- Opción para Administrador -->
                         <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
                             <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>

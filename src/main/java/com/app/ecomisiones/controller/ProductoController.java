@@ -73,7 +73,7 @@ public class ProductoController {
         boolean estaEnCarrito = false;
         if (!detalles.isEmpty()) {
             for (DetalleCarrito detalle : detalles) {
-                if (detalle.getProducto().getId() == producto.getId()){
+                if (detalle.getMercaderia().getId() == producto.getId()){
                     estaEnCarrito = true;
                 }
             }

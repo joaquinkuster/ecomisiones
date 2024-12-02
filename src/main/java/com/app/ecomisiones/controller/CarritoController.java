@@ -122,7 +122,7 @@ public class CarritoController {
             Set<DetalleCarrito> detalles = usuario.getCarrito().getDetalles();
 
             for (DetalleCarrito detalle : detalles) {
-                if (detalle.getProducto().getId() == producto.getId()) {
+                if (detalle.getMercaderia().getId() == producto.getId()) {
                     // Si el producto ya está en el carrito, lo eliminamos
                     detalle.marcarInactivo();
                     producto.setStock(producto.getStock() + detalle.getCantidad());
