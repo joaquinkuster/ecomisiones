@@ -38,7 +38,6 @@ import com.app.ecomisiones.service.Pedido.PedidoServiceImpl;
 import com.app.ecomisiones.service.Producto.ProductoServiceImpl;
 import com.app.ecomisiones.service.Sucursal.SucursalServiceImpl;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -93,64 +92,9 @@ public class PedidoController {
         }
     }
 
-    @GetMapping("/preparar/{idProducto}/{cantidad}")
-    public String getMethodName(@PathVariable int idProducto,
-            @PathVariable int cantidad,
-            Model modelo,
-            Authentication auth, RedirectAttributes redirectAttributes) {
-
-        try {
-
-            Usuario usuario = (Usuario) auth.getPrincipal();
-            List<Categoria> categorias = categoriaService.obtenerTodo();
-
-            List<MedioDePago> medios = medioDePagoService.obtenerTodo();
-            List<Sucursal> sucursales = sucursalService.obtenerTodo();
-
-            Producto producto = productoService.buscarPorId(idProducto).orElse(null);
-            if (producto == null) {
-                throw new IllegalArgumentException("Error! El producto ingresado no existe.");
-            }
-
-            Map<Producto, Integer> detalles = new HashMap<>();
-            detalles.put(producto, cantidad);
-            modelo.addAttribute("detalles", detalles);
-
-            modelo.addAttribute("categorias", categorias);
-            modelo.addAttribute("usuario", usuario);
-
-            modelo.addAttribute("mediosPago", medios);
-            modelo.addAttribute("sucursales", sucursales);
-
-            modelo.addAttribute("producto", producto);
-            modelo.addAttribute("cantidad", cantidad);
-            modelo.addAttribute("total", producto.getPrecioConDescuento() * cantidad);
-
-            double costo = 0;
-            int diasDeEspera = 0;
-            if (usuario.getSucursalMasCercana() != null) {
-                Sucursal sucursal = usuario.getSucursalMasCercana();
-                // Obtener medio de envio
-                MedioDeEnvio medioDeEnvio = obtenerEnvio(producto, sucursal);
-
-                costo = medioDeEnvio.getCosto();
-                diasDeEspera = medioDeEnvio.getDiasDeEspera();
-            }
-            modelo.addAttribute("costoEnvio", costo);
-            modelo.addAttribute("diasEspera", diasDeEspera);
-
-            return "caja";
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
-            return ("redirect:/inicio");
-
-        }
-    }
-
     @GetMapping("/preparar")
-    public String prepararDesdeCarrito(Model modelo,
+    public String prepararDesdeCarrito(@RequestParam(name = "producto", required = false) Integer idProducto,
+            @RequestParam(name = "cantidad", required = false) Integer cantidad, Model modelo,
             Authentication auth, RedirectAttributes redirectAttributes) {
 
         try {
@@ -162,12 +106,22 @@ public class PedidoController {
             List<Sucursal> sucursales = sucursalService.obtenerTodo();
 
             double total = 0;
-
             Map<Producto, Integer> detalles = new HashMap<>();
-            for (DetalleCarrito detalleCarrito : usuario.getCarrito().getDetalles()) {
-                detalles.put(detalleCarrito.getProducto(), detalleCarrito.getCantidad());
-                total += detalleCarrito.getProducto().getPrecioConDescuento() * detalleCarrito.getCantidad();
+
+            if (idProducto != null && cantidad != null) {
+                Producto producto = productoService.buscarPorId(idProducto).orElse(null);
+                if (producto == null) {
+                    throw new IllegalArgumentException("Error! El producto ingresado no existe.");
+                }
+                detalles.put(producto, cantidad);
+                total = producto.getPrecioConDescuento() * cantidad;
+            } else {
+                for (DetalleCarrito detalleCarrito : usuario.getCarrito().getDetalles()) {
+                    detalles.put(detalleCarrito.getProducto(), detalleCarrito.getCantidad());
+                    total += detalleCarrito.getProducto().getPrecioConDescuento() * detalleCarrito.getCantidad();
+                }
             }
+
             modelo.addAttribute("detalles", detalles);
 
             modelo.addAttribute("categorias", categorias);
@@ -182,19 +136,52 @@ public class PedidoController {
             int diasDeEspera = 0;
             if (usuario.getSucursalMasCercana() != null) {
                 Sucursal sucursal = usuario.getSucursalMasCercana();
-                List<Ciudad> ciudadesRepetidas = new ArrayList<>();
 
-                for (DetalleCarrito detalleCarrito : usuario.getCarrito().getDetalles()) {
-                    if (!ciudadesRepetidas.contains(detalleCarrito.getProducto().getAlmacen().getCiudad())) {
-                        // Obtener medio de envio
-                        MedioDeEnvio medioDeEnvio = obtenerEnvio(detalleCarrito.getProducto(), sucursal);
-                        costo += medioDeEnvio.getCosto();
-                        diasDeEspera += medioDeEnvio.getDiasDeEspera();
-
-                        ciudadesRepetidas.add(detalleCarrito.getProducto().getAlmacen().getCiudad());
+                if (idProducto != null && cantidad != null) {
+                    Producto producto = productoService.buscarPorId(idProducto).orElse(null);
+                    if (producto == null) {
+                        throw new IllegalArgumentException("Error! El producto ingresado no existe.");
                     }
+                    // Obtener medio de envio
+                    MedioDeEnvio medioDeEnvio = obtenerEnvio(producto, sucursal);
+                    costo = medioDeEnvio.getCosto();
+                    diasDeEspera = medioDeEnvio.getDiasDeEspera();
+                } else {
+                    List<Ciudad> ciudadesRepetidas = new ArrayList<>();
+                    for (DetalleCarrito detalleCarrito : usuario.getCarrito().getDetalles()) {
+                        Ciudad ciudad = detalleCarrito.getProducto().getAlmacen().getCiudad();
+
+                        // Asegúrate de que la ciudad no sea null
+                        if (ciudad != null) {
+                            // Verificar si ya está en la lista
+                            boolean ciudadProcesada = false;
+                            for (Ciudad c : ciudadesRepetidas) {
+                                if (c.getId() == (ciudad.getId())) {
+                                    ciudadProcesada = true;
+                                    break;
+                                }
+                            }
+
+                            // Si la ciudad no ha sido procesada, agregarla
+                            if (!ciudadProcesada) {
+                                // Obtener medio de envío
+                                MedioDeEnvio medioDeEnvio = obtenerEnvio(detalleCarrito.getProducto(), sucursal);
+
+                                // Acumular el costo y los días de espera
+                                if (medioDeEnvio != null) {
+                                    costo += medioDeEnvio.getCosto();
+                                    diasDeEspera += medioDeEnvio.getDiasDeEspera();
+                                }
+
+                                // Marcar la ciudad como procesada
+                                ciudadesRepetidas.add(ciudad);
+                            }
+                        }
+                    }
+
                 }
             }
+
             modelo.addAttribute("costoEnvio", costo);
             modelo.addAttribute("diasEspera", diasDeEspera);
 
@@ -345,16 +332,35 @@ public class PedidoController {
 
                 Usuario usuario = (Usuario) auth.getPrincipal();
 
-                Set<Ciudad> ciudadesRepetidas = new HashSet<>();
+                List<Ciudad> ciudadesRepetidas = new ArrayList<>();
                 for (DetalleCarrito detalleCarrito : usuario.getCarrito().getDetalles()) {
-                    if (!ciudadesRepetidas.contains(detalleCarrito.getProducto().getAlmacen().getCiudad())) {
-                        // Obtener medio de envio
-                        MedioDeEnvio medioDeEnvio = obtenerEnvio(detalleCarrito.getProducto(), sucursal);
+                    Ciudad ciudad = detalleCarrito.getProducto().getAlmacen().getCiudad();
 
-                        costo += medioDeEnvio.getCosto();
-                        diasDeEspera += medioDeEnvio.getDiasDeEspera();
+                    // Asegúrate de que la ciudad no sea null
+                    if (ciudad != null) {
+                        // Verificar si ya está en la lista
+                        boolean ciudadProcesada = false;
+                        for (Ciudad c : ciudadesRepetidas) {
+                            if (c.getId() == (ciudad.getId())) {
+                                ciudadProcesada = true;
+                                break;
+                            }
+                        }
 
-                        ciudadesRepetidas.add(detalleCarrito.getProducto().getAlmacen().getCiudad());
+                        // Si la ciudad no ha sido procesada, agregarla
+                        if (!ciudadProcesada) {
+                            // Obtener medio de envío
+                            MedioDeEnvio medioDeEnvio = obtenerEnvio(detalleCarrito.getProducto(), sucursal);
+
+                            // Acumular el costo y los días de espera
+                            if (medioDeEnvio != null) {
+                                costo += medioDeEnvio.getCosto();
+                                diasDeEspera += medioDeEnvio.getDiasDeEspera();
+                            }
+
+                            // Marcar la ciudad como procesada
+                            ciudadesRepetidas.add(ciudad);
+                        }
                     }
                 }
 

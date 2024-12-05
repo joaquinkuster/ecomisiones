@@ -5,19 +5,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.app.ecomisiones.config.SecurityConfig;
-import com.app.ecomisiones.helper.Img;
 import com.app.ecomisiones.model.*;
-import com.app.ecomisiones.service.Almacen.AlmacenServiceImpl;
 import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
-import com.app.ecomisiones.service.Imagen.ImagenServiceImpl;
 import com.app.ecomisiones.service.Producto.ProductoServiceImpl;
-import com.app.ecomisiones.service.Usuario.UsuarioServiceImpl;
+import com.app.ecomisiones.utils.Utilidades;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,18 +32,6 @@ public class ProductoController {
     @Autowired
     private CategoriaServiceImpl categoriaService;
 
-    @Autowired
-    private ImagenServiceImpl imagenService;
-
-    @Autowired
-    private UsuarioServiceImpl usuarioService;
-
-    @Autowired
-    private AlmacenServiceImpl almacenService;
-
-    @Autowired
-    private SecurityConfig securityConfig;
-
     // Mostrar detalles del producto
     @GetMapping("/ver/{id}")
     public String verMercaderia(@PathVariable int id, Model modelo, Authentication auth,
@@ -63,15 +46,12 @@ public class ProductoController {
                 throw new IllegalArgumentException("Error! El producto ingresado no existe.");
             }
 
-            List<Producto> relacionados = productoService.buscarPorCategoria(producto.getCategoria());
+            List<Producto> relacionados = Utilidades.limitar(productoService.buscarPorCategoria(producto.getCategoria()), 5);
 
             // Convertir las imágenes a Base64
-            List<String> imgPrincipales = Img.convertir(producto);
+            List<String> imgPrincipales = Utilidades.convertir(producto);
 
-            Map<Producto, List<String>> relacionados2 = new HashMap<>();
-            for (Producto relacionado : relacionados) {
-                relacionados2.put(relacionado, Img.convertir(relacionado));
-            }
+            Map<Producto, List<String>> relacionados2 = cargarProductosConImagenes(relacionados);
 
             Set<DetalleCarrito> detalles = usuario.getCarrito().getDetalles();
             boolean estaEnCarrito = false;
@@ -100,83 +80,132 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/admin/productos")
-    public String productos(Model modelo, Authentication auth) {
-        List<Producto> productos = productoService.obtenerTodo();
-        List<Categoria> categorias = categoriaService.obtenerTodo();
-        List<Usuario> usuarios = usuarioService.obtenerTodo();
-        List<Almacen> almacenes = almacenService.obtenerTodo();
-        modelo.addAttribute("productos", productos);
-        modelo.addAttribute("categorias", categorias);
-        modelo.addAttribute("almacenes", almacenes);
-        modelo.addAttribute("usuarios", usuarios);
-        modelo.addAttribute("usuario", usuarios);
-        return "/admin/productos";
-    }
+    @GetMapping("/buscarUltimosDisponibles")
+    public String buscarPorStock(Model modelo,
+            Authentication auth, RedirectAttributes redirectAttributes) {
 
-    @GetMapping("/crear")
-    public String crear(Model model) {
-        List<Categoria> categorias = categoriaService.obtenerTodo();
-        List<Almacen> almacenes = almacenService.obtenerTodo();
-
-        model.addAttribute("categorias", categorias);
-        model.addAttribute("almacenes", almacenes);
-        return "/productos/nuevoProducto";
-    }
-
-    @PostMapping("/crear")
-    public String crear(
-            @RequestParam(name = "nombre") String nombre,
-            @RequestParam(name = "descripcion") String descripcion,
-            @RequestParam(name = "precio") float precio,
-            @RequestParam(name = "descuento") float descuento,
-            @RequestParam(name = "peso") float peso,
-            @RequestParam(name = "stock") int stock,
-            @RequestParam(name = "vendedor", required = false) Integer idVendedor,
-            @RequestParam(name = "categoria") int idCategoria,
-            @RequestParam(name = "almacen") int idAlmacen,
-            @RequestParam(name = "imagenes", required = false) MultipartFile[] imagenes) {
         try {
 
-            System.out.println(idVendedor);
+            Map<Categoria, List<Categoria>> categorias = buscarCategorias();
+            modelo.addAttribute("categorias", categorias);
 
-            Usuario vendedor = new Usuario();
-            if (idVendedor == null) {
-                vendedor = securityConfig.obtenerUsuarioAutenticado();
-            } else {
-                vendedor = usuarioService.buscarPorId(idVendedor).orElse(null);
-                System.out.println(vendedor.toString());
-            }
+            List<Producto> filtr = productoService.buscarUltimosDisponibles();
+            Map<Producto, List<String>> filtrados = cargarProductosConImagenes(filtr);
+            modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+            modelo.addAttribute("filtrados", filtrados);
+            return "busqueda";
 
-            Categoria categoria = categoriaService.buscarPorId(idCategoria).orElse(null);
-            if (vendedor == null || categoria == null) {
-                throw new IllegalArgumentException("Error al agregar producto: Alguno de los valores es nulo");
-            }
-
-            Almacen almacen = almacenService.buscarPorId(idAlmacen).orElse(null);
-            if (almacen == null) {
-                throw new IllegalArgumentException("Error! El almacen ingresado no existe.");
-
-            }
-
-            Producto producto = productoService
-                    .guardar(new Producto(nombre, descripcion, precio, descuento, peso, stock, categoria, almacen));
-
-            if (imagenes != null) {
-                for (MultipartFile imagen : imagenes) {
-                    Imagen img = new Imagen(imagen.getBytes(), producto);
-                    img = imagenService.guardar(img);
-                    producto.getImagenes().add(img);
-                }
-            }
-
-            producto = productoService.modificar(producto);
-
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
             return "redirect:/inicio";
-
-        } catch (IllegalArgumentException | IOException e) {
-            System.out.println("Error al agregar producto: " + e);
-            return "redirect:/admin/productos";
         }
+    }
+
+    @GetMapping("/buscarRecientes")
+    public String buscarRecientes(Model modelo,
+            Authentication auth, RedirectAttributes redirectAttributes) {
+
+        try {
+
+            Map<Categoria, List<Categoria>> categorias = buscarCategorias();
+            modelo.addAttribute("categorias", categorias);
+
+            List<Producto> filtr = productoService.buscarRecientes();
+            Map<Producto, List<String>> filtrados = cargarProductosConImagenes(filtr);
+            modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+            modelo.addAttribute("filtrados", filtrados);
+            return "busqueda";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
+        }
+    }
+
+    @GetMapping("/buscarMasVendidos")
+    public String buscarRebuscarMasVendidoscientes(Model modelo,
+            Authentication auth, RedirectAttributes redirectAttributes) {
+
+        try {
+
+            Map<Categoria, List<Categoria>> categorias = buscarCategorias();
+            modelo.addAttribute("categorias", categorias);
+
+            List<Producto> filtr = productoService.buscarMasVendidos();
+            Map<Producto, List<String>> filtrados = cargarProductosConImagenes(filtr);
+            modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+            modelo.addAttribute("filtrados", filtrados);
+            return "busqueda";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
+        }
+    }
+
+    @GetMapping("/filtrar")
+    public String filtrar(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(name = "categoria", required = false) Integer idCategoria,
+            @RequestParam(required = false) Float precio,
+            @RequestParam(required = false) Float descuento,
+            RedirectAttributes redirectAttributes,
+            Model modelo, Authentication auth) {
+        try {
+
+            Map<Categoria, List<Categoria>> categorias = buscarCategorias();
+            modelo.addAttribute("categorias", categorias);
+
+            List<Producto> filtr = filtrar(nombre, precio, descuento, idCategoria);
+            Map<Producto, List<String>> filtrados = cargarProductosConImagenes(filtr);
+            modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
+            modelo.addAttribute("filtrados", filtrados);
+            return "busqueda";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
+        }
+    }
+
+    private List<Producto> filtrar(String nombre, Float precio, Float descuento, Integer idCategoria) {
+        List<Producto> productos = productoService.obtenerTodo();
+        List<Producto> filtrados = new ArrayList<>();
+
+        for (Producto producto : productos) {
+            if (((nombre == null || producto.getNombre().toLowerCase().startsWith(nombre))
+                    || (nombre == null || producto.getDescripcion().toLowerCase().contains(nombre)))
+                    && (precio == null || precio >= producto.getPrecio())
+                    && (descuento == null || descuento <= producto.getDescuento())
+                    && (idCategoria == null || producto.getCategoria().getId() == idCategoria)) {
+                filtrados.add(producto);
+            }
+        }
+
+        return filtrados;
+    }
+
+    private Map<Categoria, List<Categoria>> buscarCategorias() {
+        List<Categoria> cat = categoriaService.obtenerTodo();
+        Map<Categoria, List<Categoria>> categorias = new HashMap<>();
+        for (Categoria categoria : cat) {
+            if (categoria.getPadre() == null) {
+                List<Categoria> subcategorias = new ArrayList<>();
+                for (Categoria subcategoria : categoria.getSubcategorias()) {
+                    System.out.println(subcategoria);
+                    subcategorias.add(subcategoria);
+                }
+                categorias.put(categoria, subcategorias);
+            }
+        }
+        return categorias;
+    }
+
+    private Map<Producto, List<String>> cargarProductosConImagenes(List<Producto> productos) {
+        Map<Producto, List<String>> productosConImagenes = new HashMap<>();
+        for (Producto producto : productos) {
+            productosConImagenes.put(producto, Utilidades.convertir(producto));
+        }
+        return productosConImagenes;
     }
 }

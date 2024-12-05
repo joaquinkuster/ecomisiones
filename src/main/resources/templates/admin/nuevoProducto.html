@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Producto</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
+
 <body>
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
     <div class="container mt-5">
         <h1 class="text-center mb-4">Publicar Producto</h1>
-        <form th:action="@{/producto/crear}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/admin/agregarProducto}" method="post" enctype="multipart/form-data">
             <!-- Nombre -->
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre del Producto</label>
@@ -51,7 +56,8 @@
                 <label for="categoria" class="form-label">Categoría</label>
                 <select class="form-select" id="categoria" name="categoria" required>
                     <option value="" disabled selected>Seleccione una categoría</option>
-                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+                        th:text="${categoria.nombre}"></option>
                 </select>
             </div>
 
@@ -67,7 +73,8 @@
             <!-- Subir Imágenes -->
             <div class="mb-3">
                 <label for="imagenes" class="form-label">Subir Imágenes</label>
-                <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png" multiple required>
+                <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png"
+                    multiple required>
             </div>
 
             <!-- Botón Enviar -->
@@ -76,5 +83,15 @@
             </div>
         </form>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center mt-5 py-3 bg-light">
+        <p>&copy; 2024 EcoMisiones. Todos los derechos reservados.</p>
+    </footer>
+
+
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
 </body>
+
 </html>

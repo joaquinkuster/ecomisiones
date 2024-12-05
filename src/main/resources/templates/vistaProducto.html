@@ -77,21 +77,23 @@
                     <span th:text="${producto.categoria.nombre}"></span>
                 </p>
 
-                <!-- Botón de Comprar Ahora -->
-                <a href="#" class="btn btn-primary me-2"
-                    th:attr="onclick='comprarAhora(' + ${producto.id} + ')'">Comprar Ahora</a>
                 <!-- Define a Thymeleaf variable for the URL -->
                 <span
                     th:with="actionUrl=${!estaEnCarrito} ? '/carrito/agregar/' + ${producto.id} : '/carrito/eliminar/' + ${producto.id}">
 
 
-                    <form th:action="@{${actionUrl}}" method="post">
+                    <form th:action="@{${actionUrl}}" method="post" id="formularioProducto">
                         <!-- Incrementador de Unidades -->
                         <div class="d-flex align-items-center mb-3">
                             <label for="cantidad" class="form-label me-3">Cantidad:</label>
                             <input type="number" class="form-control" id="cantidad" name="cantidad" min="1"
                                 th:attr="max=${producto.stock}" value="1" style="width: 80px;">
                         </div>
+
+                        <input type="hidden" name="producto" id="producto" th:value="${producto.id}">
+
+                        <!-- Botón para Comprar -->
+                        <a href="#" class="btn btn-success" onclick="enviarFormulario('/pedido/preparar')">Comprar</a>
 
                         <button type="submit" class="btn btn-primary">
                             <span th:text="${!estaEnCarrito ? 'Agregar al carrito' : 'Eliminar del carrito'}"></span>
@@ -105,6 +107,7 @@
         <!-- Productos Relacionados -->
         <div class="mt-5">
             <h3>Productos Relacionados</h3>
+            <a class="btn btn-info btn-sm" th:href="@{'/producto/filtrar?categoria=' + ${producto.categoria.id}}">Ver más</a>
             <div class="slider">
                 <div th:each="relacionado : ${relacionados}" class="p-2">
                     <div class="card" style="width: 18rem;">
@@ -151,12 +154,11 @@
     <script>
         // Inicializar slider
 
-        function comprarAhora(productoId) {
-            // Obtiene el valor del input basado en el id dinámico
-            const cantidad = document.getElementById('cantidad').value;
-
-            // Redirige a la URL con los parámetros dinámicos
-            window.location.href = `/pedido/preparar/${productoId}/${cantidad}`;
+        function enviarFormulario(actionUrl) {
+            const form = document.getElementById('formularioProducto');
+            form.action = actionUrl; // Cambia la acción del formulario dinámicamente
+            form.method = 'get'; // Cambia el método a GET
+            form.submit(); // Envía el formulario
         }
 
         $(document).ready(function () {

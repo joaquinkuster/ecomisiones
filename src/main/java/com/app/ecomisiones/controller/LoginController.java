@@ -1,23 +1,26 @@
 package com.app.ecomisiones.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
 
     @GetMapping("/login")
-    public String login() {
-        return "login"; // nombre del archivo HTML (login.html)
+    public String login(@RequestParam(value="error", required = false) String error, Model model) {
+        if(error != null) {
+            model.addAttribute("mensaje", "Error! La contraseña o el correo ingresado es inválido.");
+        }
+        return "login";
     }
 
-    @GetMapping("/logout")
+    /*@GetMapping("/logout")
     public String logout(HttpSession session){
         session.removeAttribute("usuario");
         return "login";
-    }
+    }*/
 
     /* @PostMapping("/login")
     public String login(

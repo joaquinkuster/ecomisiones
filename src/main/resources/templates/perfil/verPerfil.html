@@ -51,7 +51,7 @@
                 <!-- Categoría -->
                 <div class="mb-3">
                     <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
-                    <select id="sucursal" name="sucursal" class="form-select" required>
+                    <select id="sucursal" name="sucursal" class="form-select">
                         <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una sucursal</option>
                         <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles
                         </option>
@@ -63,10 +63,10 @@
 
                 <!-- Almacen -->
                 <div class="mb-3">
-                    <label for="medioDePago" class="form-label">Medio de Pago Predeterminado</label>>
+                    <label for="medioDePago" class="form-label">Medio de Pago Predeterminado</label>
                     </select>
-                    <select id="medioPago" name="medioPago" class="form-select" required>
-                        <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}"> disabled>Seleccione un medio de pago</option>
+                    <select id="medioPago" name="medioPago" class="form-select">
+                        <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}" disabled>Seleccione un medio de pago</option>
                         <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago
                             disponibles</option>
                         <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:text="${medio.nombre}">

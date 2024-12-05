@@ -12,16 +12,9 @@
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
-    <div th:if="${mensaje != null}" class="alert alert-warning" role="alert">
-        <p th:text="${mensaje}"></p>
+    <div th:if="${filtrados.empty}" class="alert alert-warning" role="alert">
+        No se encontró ningún resultado.
     </div>
-
-    <a class="btn btn-primary" th:href="@{/producto/filtrar?descuento=50}">Desde un 50%</a>
-
-    <a class="btn btn-primary" th:href="@{/producto/filtrar?precio=10000}">Hasta $10.000</a>
-
-    <a class="btn btn-primary" th:href="@{/producto/buscarUltimosDisponibles}">Últimos disponibles</a>
-
 
     <!-- Select de categorías -->
     <div class="container mt-5">
@@ -66,36 +59,9 @@
 
     <!-- Sección de productos -->
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Productos destacados</h2>
-        <a class="btn btn-primary" th:href="@{/producto/buscarMasVendidos}">Ver Más</a>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <!-- Bucle para listar productos -->
-            <div class="col" th:each="producto : ${destacados}">
-                <div class="card h-100">
-                    <div th:each="imagen : ${producto.value}">
-                        <img th:src="'data:image/png;base64,' + ${imagen}" alt="Imagen del producto" width="50"
-                            height="50">
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
-                        <p class="card-text" th:text="${producto.key.descripcion}">Descripción del producto</p>
-                        <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
-                        <a th:href="@{/producto/ver/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver
-                            Producto</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sección de productos -->
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Últimos lanzamientos</h2>
-        <a class="btn btn-primary" th:href="@{/producto/buscarRecientes}">Ver Más</a>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- Bucle para listar productos -->
-            <div class="col" th:each="producto : ${recientes}">
+            <div class="col" th:each="producto : ${filtrados}">
                 <div class="card h-100">
                     <div th:each="imagen : ${producto.value}">
                         <img th:src="'data:image/png;base64,' + ${imagen}" alt="Imagen del producto" width="50"
@@ -119,9 +85,8 @@
         <p>&copy; 2024 EcoMisiones. Todos los derechos reservados.</p>
     </footer>
 
-
-    <!-- Incluir el fragmento navbar -->
-    <div th:insert="~{fragments/scripts :: scripts}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/index.js"></script>
 </body>
 
 </html>

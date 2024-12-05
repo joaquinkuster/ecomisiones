@@ -81,8 +81,8 @@ public class Pedido {
     }
 
     public void agregarDetalles(Set<DetallePedido> detalles) {
-        for (DetallePedido detalleCompra : this.detalles) {
-            detalles.add(detalleCompra);
+        for (DetallePedido detalleCompra : detalles) {
+            this.detalles.add(detalleCompra);
         }
     }
 

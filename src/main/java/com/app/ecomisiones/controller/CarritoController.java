@@ -92,7 +92,7 @@ public class CarritoController {
             producto.setStock(producto.getStock() - cantidad);
             productoService.modificar(producto);
 
-            redirectAttributes.addFlashAttribute("mensaje", "Hecho! Producto agregado al carrito correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho! El producto se ha agregado al carrito correctamente.");
 
             usuario.getCarrito().calcularTotal();
             carritoService.modificar(usuario.getCarrito());
@@ -131,7 +131,7 @@ public class CarritoController {
                     producto.setStock(producto.getStock() + detalle.getCantidad());
                     productoService.modificar(producto);
                     detalleCarritoService.borrar(detalle);
-                    redirectAttributes.addFlashAttribute("mensaje", "Hecho! Producto eliminado del carrito correctamente.");
+                    redirectAttributes.addFlashAttribute("mensaje", "Hecho! El producto se ha eliminado del carrito correctamente.");
                     break;
                 }
             }

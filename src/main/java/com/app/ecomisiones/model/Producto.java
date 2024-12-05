@@ -57,6 +57,9 @@ public class Producto {
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
     private Set<Imagen> imagenes = new HashSet<>();
 
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private Set<DetallePedido> ventas = new HashSet<>();
+
     public Producto(String nombre, String descripcion, float precio, float descuento, float peso, int stock,
             Categoria categoria, Almacen almacen) {
         this.nombre = nombre;

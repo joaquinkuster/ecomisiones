@@ -55,4 +55,19 @@ public class ProductoServiceImpl implements ProductoService, CrudService<Product
     public List<Producto> buscarPorCategoria(Categoria categoria) {
         return productoRepository.findByCategoriaAndBajaFalse(categoria); // Solo devuelve categorias activas
     }
+
+    @Override
+    public List<Producto> buscarRecientes() {
+        return productoRepository.findAllByOrderByFechaCreacionDesc();
+    }
+
+    @Override
+    public List<Producto> buscarUltimosDisponibles(){
+        return productoRepository.findAllByOrderByStockAsc();
+    }
+
+    @Override
+    public List<Producto> buscarMasVendidos(){
+        return productoRepository.findProductosByVentasDesc();
+    }
 }

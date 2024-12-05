@@ -12,12 +12,15 @@
                     <a class="nav-link" th:href="@{/inicio}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Acerca de</a>
+                    <a class="nav-link" th:href="@{/catalogo/ver}">Catálogo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/acercaDe}">Acerca de</a>
                 </li>
                 <li class="nav-item">
                     <!-- Buscador -->
-                    <form class="d-flex" th:action="@{/buscar}" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Buscar productos" name="query"
+                    <form class="d-flex" th:action="@{/producto/filtrar}" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Buscar productos" name="nombre" id="nombre"
                             aria-label="Buscar">
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="bi bi-search"></i>
@@ -44,13 +47,8 @@
                         <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
                     </li>
 
-                    <!-- Opción para Usuario -->
-                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
-                        <a th:href="@{/producto/crear}" class="dropdown-item">Vender</a>
-                    </li>
-
                     <!-- Enlace para cerrar sesión -->
-                    <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+                    <a href="#" class="dropdown-item btnLogout" id="btnLogout" pag-redirect="/logout">Cerrar sesión</a>
                 </ul>
             </div>
             <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito

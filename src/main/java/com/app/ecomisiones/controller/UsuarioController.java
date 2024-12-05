@@ -3,6 +3,7 @@ package com.app.ecomisiones.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,7 @@ public class UsuarioController {
     private CategoriaServiceImpl categoriaService;
 
     @Autowired
-    private  CarritoServiceImpl carritoService;
+    private CarritoServiceImpl carritoService;
 
     @Autowired
     private SucursalServiceImpl sucursalService;
@@ -46,6 +47,12 @@ public class UsuarioController {
     private MedioDePagoServiceImpl medioDePagoService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final AuthenticationManager authenticationManager;
+
+    public UsuarioController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     // Registro de una Nueva Cuenta
     @GetMapping("/registro")
@@ -70,7 +77,12 @@ public class UsuarioController {
             }
 
             return "login";
+
+            // Redirigir al usuario a la página de inicio o donde se desee
+
         } catch (Exception e) {
+
+            System.out.println(e.getMessage());
             return "registro";
 
         }
@@ -101,7 +113,7 @@ public class UsuarioController {
             @RequestParam(name = "correo") String correo,
             @RequestParam(name = "telefono", required = false) String telefono,
             @RequestParam(name = "sucrusal", required = false) Integer idSucursal,
-            @RequestParam(name = "medioDePago", required = false) Integer idMedioDePago, 
+            @RequestParam(name = "medioDePago", required = false) Integer idMedioDePago,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -114,7 +126,7 @@ public class UsuarioController {
             usuario.setNombre(nombre);
             usuario.setApellido(apellido);
             usuario.setCorreo(correo);
-            
+
             if (telefono != null) {
                 usuario.setTelefono(telefono);
             }
@@ -184,7 +196,7 @@ public class UsuarioController {
                 System.out.println("no coincide");
                 throw new BadCredentialsException("La contraseña proporcionada no coincide con la registrada.");
             }
- 
+
             if (!nueva.equals(nuevaRepetida)) {
                 throw new IllegalArgumentException("Las contraseñas no coinciden.");
             }

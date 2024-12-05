@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
 import com.app.ecomisiones.service.Producto.ProductoServiceImpl;
+import com.app.ecomisiones.utils.Utilidades;
 import com.app.ecomisiones.model.Categoria;
 import com.app.ecomisiones.model.Producto;
 import com.app.ecomisiones.model.Usuario;
-import com.app.ecomisiones.helper.Img;
 
 import org.springframework.security.core.Authentication;
 
@@ -31,7 +31,7 @@ public class InicioController {
 
     @GetMapping("/inicio")
     public String home(Model model, Authentication auth) {
-        
+
         // Lista de categorías y productos desde la base de datos
         Usuario usuario = (Usuario) auth.getPrincipal();
 
@@ -48,26 +48,35 @@ public class InicioController {
             }
         }
 
-        List<Producto> productos = productoService.obtenerTodo();
-        Map<Producto, List<String>> productos2 = new HashMap<>();
-        for (Producto producto : productos) {
-            productos2.put(producto, Img.convertir(producto));
+        List<Producto> dest = Utilidades.limitar(productoService.buscarMasVendidos(), 5);
+        Map<Producto, List<String>> destacados = new HashMap<>();
+        for (Producto producto : dest) {
+            destacados.put(producto, Utilidades.convertir(producto));
+        }
+
+        List<Producto> rec = Utilidades.limitar(productoService.buscarRecientes(), 5);
+        Map<Producto, List<String>> recientes = new HashMap<>();
+        for (Producto producto : rec) {
+            recientes.put(producto, Utilidades.convertir(producto));
         }
 
         model.addAttribute("categorias", categorias);
-        model.addAttribute("productos", productos2);
+        model.addAttribute("destacados", destacados);
+        model.addAttribute("recientes", recientes);
         model.addAttribute("usuario", usuario);
 
         return "index";
     }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('Administrador')")
-    public String admin(Model model, Authentication auth) {
-        List<Categoria> categorias = categoriaService.obtenerTodo();
-
-        model.addAttribute("categorias", categorias);
+    @GetMapping("/acercaDe")
+    public String acercadE(Model model, Authentication auth) {
         model.addAttribute("usuario", (Usuario) auth.getPrincipal());
-        return "admin/admin";
+        return "acercaDe";
+    }
+
+    @GetMapping("/error")
+    public String error(Model model, Authentication auth) {
+        model.addAttribute("usuario", (Usuario) auth.getPrincipal());
+        return "error";
     }
 }

@@ -70,17 +70,11 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMe">
-                <label class="form-check-label" for="rememberMe">Remember me</label>
-            </div>
             <button type="submit" class="btn btn-block login-btn">Login</button>
-            <a th:href="@{/registro}" class="btn btn-link">Crear una cuenta</a>
         </form>
 
         <div class="form-footer">
-            <p>Don't have an account? <a href="#">Sign up</a></p>
-            <p><a href="#">Forgot your password?</a></p>
+            <p>Don't have an account? <a th:href="@{/registro}">Sign up</a></p>
         </div>
     </div>
 

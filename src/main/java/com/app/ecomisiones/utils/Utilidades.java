@@ -1,4 +1,4 @@
-package com.app.ecomisiones.helper;
+package com.app.ecomisiones.utils;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.app.ecomisiones.model.Producto;
 
-public class Img {
+public class Utilidades {
 
     public static List<String> convertir(Producto producto) {
         List<String> img = new ArrayList<>();
@@ -16,4 +16,8 @@ public class Img {
                 .toList());
         return img;
     }
+
+    public static <T> List<T> limitar(List<T> lista, int max) {
+        return lista.size() > max ? lista.subList(0, max) : lista;
+    }    
 }
