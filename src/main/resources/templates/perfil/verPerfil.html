@@ -6,6 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar Usuario</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Animación de campo de formulario */
+        .form-outline input.form-control:focus, .form-outline select.form-select:focus {
+            border-color: #007bff; /* Color del borde al hacer foco */
+            box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.5); /* Resplandor del foco */
+            transition: all 0.3s ease-in-out; /* Transición suave */
+        }
+
+        .form-outline label {
+            font-weight: bold;
+            color: #6c757d; /* Color del texto por defecto */
+            transition: all 0.3s ease-in-out; /* Transición suave */
+        }
+
+        .form-outline input.form-control:focus + .form-label,
+        .form-outline select.form-select:focus + .form-label {
+            color: #007bff; /* Color del texto de la etiqueta cuando el campo tiene foco */
+            transform: translateY(-20px); /* Animación para desplazar la etiqueta */
+            font-size: 0.9rem;
+        }
+
+        /* Animación del botón */
+        .btn-primary {
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Color más oscuro al pasar el mouse */
+        }
+    </style>
 </head>
 
 <body>
@@ -13,84 +49,80 @@
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
     <!-- Contenedor centralizado -->
-    <div class="d-flex justify-content-center align-items-center min-vh-100">
-        <div class="bg-white shadow-lg rounded p-4 w-100" style="max-width: 400px;">
-            <h2 class="text-center h3 font-weight-bold text-dark mb-4">Actualizar Usuario</h2>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="text-center mb-4 fw-bold text-primary">Actualizar Usuario</h2>
 
-            <!-- Formulario de Actualización -->
-            <form th:action="@{/usuarios/modificar/{id}(id=${usuario.id})}" method="post" id="updateForm">
+                <!-- Formulario de Actualización -->
+                <form th:action="@{/usuarios/modificar/{id}(id=${usuario.id})}" method="post" id="updateForm">
 
-                <!-- Nombre -->
-                <div class="mb-3">
-                    <label for="first-name" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="first-name" name="nombre" th:value="${usuario.nombre}"
-                        placeholder="Cosme" required>
-                </div>
+                    <!-- Nombre -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="first-name" name="nombre" class="form-control" th:value="${usuario.nombre}"
+                            placeholder="Cosme" required />
+                        <label class="form-label" for="first-name">Nombre</label>
+                    </div>
 
-                <!-- Apellido -->
-                <div class="mb-3">
-                    <label for="last-name" class="form-label">Apellido</label>
-                    <input type="text" class="form-control" id="last-name" name="apellido"
-                        th:value="${usuario.apellido}" placeholder="Fulanito" required>
-                </div>
+                    <!-- Apellido -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="last-name" name="apellido" class="form-control" th:value="${usuario.apellido}"
+                            placeholder="Fulanito" required />
+                        <label class="form-label" for="last-name">Apellido</label>
+                    </div>
 
-                <!-- Correo Electrónico -->
-                <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="correo" th:value="${usuario.correo}"
-                        placeholder="cosme@gmail.com" required>
-                </div>
+                    <!-- Correo Electrónico -->
+                    <div class="form-outline mb-4">
+                        <input type="email" id="email" name="correo" class="form-control" th:value="${usuario.correo}"
+                            placeholder="cosme@gmail.com" required />
+                        <label class="form-label" for="email">Correo Electrónico</label>
+                    </div>
 
-                <!-- Teléfono -->
-                <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" th:value="${usuario.telefono}"
-                        placeholder="+54 9 11 1234-5678">
-                </div>
+                    <!-- Teléfono -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="telefono" name="telefono" class="form-control" th:value="${usuario.telefono}"
+                            placeholder="+54 9 11 1234-5678" />
+                        <label class="form-label" for="telefono">Teléfono</label>
+                    </div>
 
-                <!-- Categoría -->
-                <div class="mb-3">
-                    <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
-                    <select id="sucursal" name="sucursal" class="form-select" required>
-                        <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una sucursal</option>
-                        <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles
-                        </option>
-                        <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
-                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}">
-                        </option>
-                    </select>
-                </div>
+                    <!-- Sucursal Más Cercana -->
+                    <div class="form-outline mb-4">
+                        <select id="sucursal" name="sucursal" class="form-select" required>
+                            <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una sucursal</option>
+                            <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles</option>
+                            <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}" th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}"
+                                th:text="${sucursal}"></option>
+                        </select>
+                        <label class="form-label" for="sucursal">Sucursal Más Cercana</label>
+                    </div>
 
-                <!-- Almacen -->
-                <div class="mb-3">
-                    <label for="medioDePago" class="form-label">Medio de Pago Predeterminado</label>>
-                    </select>
-                    <select id="medioPago" name="medioPago" class="form-select" required>
-                        <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}"> disabled>Seleccione un medio de pago</option>
-                        <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago
-                            disponibles</option>
-                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:text="${medio.nombre}">
-                        </option>
-                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}"
-                            th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio}">
-                        </option>
-                    </select>
-                </div>
+                    <!-- Medio de Pago Predeterminado -->
+                    <div class="form-outline mb-4">
+                        <select id="medioPago" name="medioPago" class="form-select" required>
+                            <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}" disabled>Seleccione un medio de pago</option>
+                            <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago disponibles</option>
+                            <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio.nombre}"></option>
+                        </select>
+                        <label class="form-label" for="medioPago">Medio de Pago Predeterminado</label>
+                    </div>
 
-                <!-- Botón de Actualizar -->
-                <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Actualizar</button>
+                    <!-- Botón de Actualizar -->
+                    <button type="submit" class="btn btn-primary btn-block">Actualizar</button>
 
-            </form>
+                </form>
 
-            <!-- Enlace para cambiar contraseña -->
-            <a th:href="@{/usuarios/cambiarContrasena}" class="btn btn-danger w-100 py-2 mt-3">
-                Cambiar Contraseña
-            </a>
+                <!-- Enlace para cambiar contraseña -->
+                <a th:href="@{/usuarios/cambiarContrasena}" class="btn btn-danger btn-block mt-3">Cambiar Contraseña</a>
+            </div>
         </div>
     </div>
 
-
+    <!-- MDBootstrap JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>

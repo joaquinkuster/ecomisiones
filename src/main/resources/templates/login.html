@@ -1,51 +1,79 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Iniciar sesión</title>
+    <!-- MDBootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"
+      rel="stylesheet"
+    />
     <style>
+        /* Fondo con imagen */
         body {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f7f7f7;
+            background-image: url('https://img.freepik.com/free-photo/top-view-reusable-bag-with-wooden-spoons-copy-space_23-2148493524.jpg?t=st=1733388478~exp=1733392078~hmac=bdedaa7b994a2ac464c115205a07806436dd97d632ede0401352eead4fffe23b&w=1380'); /* Cambia por una URL real */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Oscurecer fondo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Oscurecer con transparencia */
+            z-index: 1;
+        }
+
+        /* Contenedor de login */
         .login-container {
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con transparencia */
             padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
+            position: relative;
+            z-index: 2;
         }
+
         .login-container h2 {
             margin-bottom: 1.5rem;
             text-align: center;
             font-weight: bold;
         }
-        .form-control:focus {
-            box-shadow: none;
-        }
+
         .login-btn {
             background-color: #007bff;
             color: white;
         }
+
         .login-btn:hover {
             background-color: #0056b3;
         }
+
         .form-footer {
             margin-top: 1rem;
             text-align: center;
         }
+
         .form-footer a {
             color: #007bff;
             text-decoration: none;
         }
+
         .form-footer a:hover {
             text-decoration: underline;
         }
@@ -54,7 +82,7 @@
 <body>
 
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Iniciar sesión</h2>
 
         <!-- Mostrar mensaje de error si hay uno -->
         <div th:if="${error}" class="alert alert-danger" role="alert">
@@ -62,32 +90,32 @@
         </div>
 
         <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="username">Correo</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter dni" required>
+            <div class="form-outline mb-4" data-mdb-input-init>
+                <input type="text" id="username" name="username" class="form-control" required />
+                <label class="form-label" for="username">Correo electrónico</label>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            <div class="form-outline mb-4" data-mdb-input-init>
+                <input type="password" id="password" name="password" class="form-control" required />
+                <label class="form-label" for="password">Contraseña</label>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMe">
-                <label class="form-check-label" for="rememberMe">Remember me</label>
+            <div class="form-check mb-4">
+                <input type="checkbox" class="form-check-input" id="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Recuérdame</label>
             </div>
-            <button type="submit" class="btn btn-block login-btn">Login</button>
-            <a th:href="@{/registro}" class="btn btn-link">Crear una cuenta</a>
+            <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+            
         </form>
 
         <div class="form-footer">
-            <p>Don't have an account? <a href="#">Sign up</a></p>
-            <p><a href="#">Forgot your password?</a></p>
+            <p>¿No tienes una cuenta? <a th:href="@{/registro}">Regístrate aquí</a></p>
+            <p><a href="#">¿Olvidaste tu contraseña?</a></p>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <!-- MDBootstrap JS -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+    ></script>
 </body>
 </html>

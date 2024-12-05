@@ -1,61 +1,145 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/inicio}">EcoMisiones</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/inicio}">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Acerca de</a>
-                </li>
-                <li class="nav-item">
-                    <!-- Buscador -->
-                    <form class="d-flex" th:action="@{/buscar}" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Buscar productos" name="query"
-                            aria-label="Buscar">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar con Barra de Búsqueda</title>
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+        <div class="container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="#">
+                <img src="/img/LogoEcomisiones.png" alt="Logo" height="40" class="d-inline-block align-text-top">
+            </a>
+
+            <!-- Botón de menú responsivo -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Contenido del navbar -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- Enlaces de navegación y barra de búsqueda -->
+                <div class="d-flex align-items-center">
+                    <ul class="navbar-nav me-3 mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Catálogo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Acerca de</a>
+                        </li>
+                    </ul>
+
+                    <!-- Barra de búsqueda -->
+                    <form class="d-flex align-items-center">
+                        <div class="input-group">
+                            <input id="search-input" type="text" class="form-control" placeholder="Buscar"
+                                aria-label="Buscar" />
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false"> Categorías
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <!-- Se genera la lista de categorías desde Thymeleaf -->
+                                <!-- Formulario de selección de categorías -->
+                                <div class="container mt-5">
+                                    <form method="post" action="/procesar">
+                                        <h2>Seleccionar Categoría y Subcategoría</h2>
+                                        <div class="accordion" id="accordionCategorias">
+                                            <th:block th:each="categoria : ${categorias}">
+                                                <div class="accordion-item">
+                                                    <!-- <h2 class="accordion-header" id="heading-${categoria.id}">
+                                                        <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapse-${categoria.id}"
+                                                            aria-expanded="true"
+                                                            aria-controls="collapse-${categoria.id}">
+                                                            <span th:text="${categoria}"></span>
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapse-${categoria.id}"
+                                                        class="accordion-collapse collapse"
+                                                        aria-labelledby="heading-${categoria.id}"
+                                                        data-bs-parent="#accordionCategorias">
+                                                        <div class="accordion-body">
+                                                            <select class="form-select"
+                                                                name="subcategoria-${categoria.id}">
+                                                                <option value="">Seleccione una subcategoría</option>
+                                                                <th:block th:each="subcategoria : ${categoria}">
+                                                                    <option th:value="${subcategoria.id}"
+                                                                        th:text="${subcategoria}">
+                                                                    </option>
+                                                                </th:block>
+                                                            </select>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ul>
+                            <button id="search-button" type="button" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </form>
-                </li>
-            </ul>
-
-            <!-- Botones de inicio de sesión y carrito -->
-            <!-- Enlaces del usuario -->
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Hola, <span th:text="${usuario.nombre}">Usuario</span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                    <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
-
-                    <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
-
-                    <!-- Opción para Administrador -->
-                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
-                        <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
-                    </li>
-
-                    <!-- Opción para Usuario -->
-                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
-                        <a th:href="@{/producto/crear}" class="dropdown-item">Vender</a>
-                    </li>
-
-                    <!-- Enlace para cerrar sesión -->
-                    <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
-                </ul>
+                </div>
             </div>
-            <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito
-                <span th:text="${usuario.carrito.detalles.size()}"></span></a>
+            <!-- Carrito y foto de perfil a la derecha -->
+            <!-- Right-side Buttons -->
+            <div class="d-flex align-items-center">
+                <!-- Cart Icon -->
+                <a th:href="@{/carrito/ver}"  class="text-reset me-3 position-relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge badge-notification">1</span>
+                </a>
+                <!-- Hola, <span th:text="${usuario.nombre}"><br></span> -->
+
+                <!-- Profile Dropdown -->
+                <div class="dropdown">
+                    <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" role="button"
+                        data-mdb-toggle="dropdown" aria-expanded="false">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="30"
+                            alt="Avatar" loading="lazy" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+
+                        <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
+
+                        <!-- Opción para Administrador -->
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
+                            <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+                        </li>
+
+                        <!-- Opción para Usuario -->
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
+                            <a th:href="@{/producto/crear}" class="dropdown-item">Vender</a>
+                        </li>
+                        <li><a class="dropdown-item" th:href="@{/logout}">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-    </div>
-</nav>
+    </nav>
+
+    <!-- MDBootstrap JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+</body>
+
+</html>

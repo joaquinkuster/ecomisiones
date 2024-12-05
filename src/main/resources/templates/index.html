@@ -5,99 +5,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoMisiones</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s;
+        }
+
+        .carousel-inner img {
+            width: 100%;
+            height: 50vh;
+            /* Ocupa toda la altura de la pantalla */
+            object-fit: cover;
+            /* Asegura que la imagen cubra toda el área */
+        }
+
+        .carousel-indicators button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #007bff;
+        }
+
+        .carousel-indicators .active {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
-    <div th:if="${mensaje != null}" class="alert alert-warning" role="alert">
-        <p th:text="${mensaje}"></p>
-    </div>
+    <p th:text="${mensaje}"></p>
+    <!-- Carousel -->
 
-    <!-- Select de categorías -->
-    <div class="container mt-5">
-
-        <!-- Iterar sobre las categorías -->
-        <form method="post" action="/procesar">
-            <h2>Seleccionar Categoría y Subcategoría</h2>
-            <!-- Acordeón de categorías -->
-            <div class="accordion" id="accordionCategorias">
-                <th:block th:each="categoria : ${categorias}">
-                    <!-- Acordeón para cada categoría -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading-${categoria.key.id}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse-${categoria.key.id}" aria-expanded="true"
-                                aria-controls="collapse-${categoria.key.id}">
-                                <span th:text="${categoria.key.nombre}"></span>
-                            </button>
-                        </h2>
-                        <div id="collapse-${categoria.key.id}" class="accordion-collapse collapse"
-                            aria-labelledby="heading-${categoria.key.id}" data-bs-parent="#accordionCategorias">
-                            <div class="accordion-body">
-                                <!-- Subcategorías de la categoría -->
-                                <select class="form-select" name="subcategoria-${categoria.key.id}">
-                                    <option value="">Seleccione una subcategoría</option>
-                                    <th:block th:each="subcategoria : ${categoria.value}">
-                                        <option th:value="${subcategoria.id}" th:text="${subcategoria.nombre}">
-                                        </option>
-                                    </th:block>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </th:block>
-
-                <!-- Precio -->
-                <div class="mb-3">
-                    <label for="precio" class="form-label">Menor a (en $)</label>
-                    <input type="number" class="form-control" id="precio" name="precio" step="any" min="1" max="1000000">
-                </div>
-
-                <!-- Descuento -->
-                <div class="mb-3">
-                    <label for="descuento" class="form-label">Desde (%)</label>
-                    <input type="number" class="form-control" id="descuento" name="descuento" step="any" min="1" max="100">
+    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="1"
+                aria-label="Slide 2"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%282%29.jpg"
+                    class="d-block w-100" alt="Slide 1">
+                <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+                <div class="carousel-caption d-none d-sm-block mb-5">
+                    <h1 class="mb-4"><strong>Bienvenido a EcoMisiones</strong></h1>
+                    <p><strong>Conecta productos con el mejor precio</strong></p>
+                    <a href="#productos" class="btn btn-outline-white btn-lg">Ultimos lanzamientos</i></a>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
-        </form>
-    </div>
-
-    <!-- Sección de productos -->
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Productos destacados</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- Bucle para listar productos -->
-            <div class="col" th:each="producto : ${productos}">
-                <div class="card h-100">
-                    <div th:each="imagen : ${producto.value}">
-                        <img th:src="'data:image/png;base64,' + ${imagen}" alt="Imagen del producto" width="50"
-                            height="50">
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
-                        <p class="card-text" th:text="${producto.key.descripcion}">Descripción del producto</p>
-                        <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
-                        <a th:href="@{/producto/ver/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver
-                            Producto</a>
-                    </div>
+            <div class="carousel-item">
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%283%29.jpg"
+                    class="d-block w-100" alt="Slide 2">
+                <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+                <div class="carousel-caption d-none d-sm-block mb-5">
+                    <h1 class="mb-4"><strong>Gracias por visitar nuestro sitio</strong></h1>
+                    <p><strong>Descubre los mejores productos</strong></p>
                 </div>
             </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleCaptions"
+            data-mdb-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleCaptions"
+            data-mdb-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+    <div class="container mt-4">
+        <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p th:text="${mensaje}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> -->
+
+
+
+        <!-- Carousel de productos -->
+        <section class="text-center my-5">
+            <div class="mb-3">
+                <label for="precio" class="form-label">Menor a (en $)</label>
+                <input type="number" class="form-control" id="precio" name="precio"
+                    step="any" min="1" max="1000000">
+            </div>
+
+            <div class="mb-3">
+                <label for="descuento" class="form-label">Desde (%)</label>
+                <input type="number" class="form-control" id="descuento" name="descuento"
+                    step="any" min="1" max="100">
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
+            <h2 class="mb-4">Ultimos productos ecológicos</h2>
+            <div id="productCarousel" class="carousel slide" data-mdb-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row row-cols-1 row-cols-md-3 g-4">
+                            <div class="col" th:each="producto : ${productos}">
+                                <div class="card h-100 shadow-3-strong">
+                                    <div th:each="imagen : ${producto.value}"> <img
+                                            th:src="'data:image/png;base64,' + ${imagen}" class="card-img-top"
+                                            alt="Imagen del producto"> </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
+                                        <p class="card-text" th:text="${producto.key.descripcion}">Descripción del
+                                            producto</p>
+                                        <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
+                                        
+                                        <a th:href="@{/productos/{id}(id=${producto.key.id})}"
+                                            class="btn btn-primary">Ver Producto</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Añadir más items del carrusel aquí -->
+                </div> <button class="carousel-control-prev" type="button" data-mdb-target="#productCarousel"
+                    data-mdb-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+                        class="visually-hidden">Anterior</span> </button> <button class="carousel-control-next"
+                    type="button" data-mdb-target="#productCarousel" data-mdb-slide="next"> <span
+                        class="carousel-control-next-icon" aria-hidden="true"></span> <span
+                        class="visually-hidden">Siguiente</span> </button>
+            </div>
     </div>
 
     <!-- Footer -->
-    <footer class="text-center mt-5 py-3 bg-light">
+    <footer class="text-center mt-5 py-3 bg-light text-muted">
         <p>&copy; 2024 EcoMisiones. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/js/index.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+    <script>
+        // Añadir animación de entrada a las tarjetas
+        document.addEventListener('DOMContentLoaded', function () {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.classList.add('animate__animated', 'animate__fadeInUp');
+            });
+        });
+
+        // Añadir efecto de hover a las tarjetas
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseover', () => {
+                card.classList.add('shadow-lg');
+            });
+            card.addEventListener('mouseout', () => {
+                card.classList.remove('shadow-lg');
+            });
+        });
+    </script>
+
 </body>
 
 </html>

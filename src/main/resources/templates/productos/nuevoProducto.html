@@ -5,76 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Producto</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .card-0 {
+            min-height: 110vh;
+            background: linear-gradient(-20deg, rgb(255, 255, 255) 50%, #0275d8 50%);
+            color: white;
+            border: 0px;
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 25px !important;
+            font-weight: 500;
+        }
+
+        .container {
+            padding-top: 100px !important;
+            border-radius: 20px;
+        }
+
+        .btn {
+            letter-spacing: 1px;
+        }
+
+        select:active {
+            box-shadow: none !important;
+            outline-width: 0 !important;
+        }
+
+        input,
+        textarea {
+            padding: 10px 12px 10px 12px;
+            border: 1px solid lightgrey;
+            border-radius: 0px !important;
+            margin-bottom: 5px;
+            margin-top: 2px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #2C3E50;
+            font-size: 14px;
+            letter-spacing: 1px;
+            resize: none;
+        }
+
+        select:focus,
+        input:focus {
+            box-shadow: none !important;
+            border: 1px solid #2196F3 !important;
+            outline-width: 0 !important;
+            font-weight: 400
+        }
+
+        label {
+            margin-bottom: 2px;
+            font-weight: bolder;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus {
+            -moz-box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            border: 1px solid #304FFE;
+            outline-width: 0
+        }
+
+        .form-control {
+            height: calc(2em + .75rem + 3px);
+        }
+
+        .inner-card {
+            margin: 79px 0px 70px 0px;
+        }
+
+        .card-1 {
+            border-radius: 17px;
+            color: black;
+            box-shadow: 2px 4px 15px 0px rgb(0, 0, 0 , 0.5) !important;
+        }
+
+        #file {
+            border: 2px dashed #92b0b3 !important;
+        }
+
+        .color input {
+            background-color: #f1f1f1;
+        }
+
+        .files:before {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            content: attr(data-before);
+            color: #000;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        #file {
+            display: inline-block;
+            width: 100%;
+            padding: 95px 0 0 100%;
+            background: url('https://i.imgur.com/VXWKoBD.png') top center no-repeat #fff;
+            background-size: 55px 55px;
+        }
+        style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://img.freepik.com/free-photo/cherry-leaves-frame-green-background_23-2148236736.jpg?t=st=1733389002~exp=1733392602~hmac=c2da6927ec28a7af1fa1d390a87d89e7f9df75ba131c742ef5c3363bc16bdb7c&w=1380'); /* Cambia por una URL real */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        
+
+    </style>
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Publicar Producto</h1>
-        <form th:action="@{/producto/crear}" method="post" enctype="multipart/form-data">
-            <!-- Nombre -->
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
+    <div class="container card-0 justify-content-center">
+        <div class="card-body px-sm-4 px-0">
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-10 col">
+                    <h3 class="font-weight-bold ml-md-0 mx-auto text-center text-sm-left">Publicar Producto</h3>
+                    <p class="mt-md-4 ml-md-0 ml-2 text-center text-sm-left">
+                        Publique su producto con detalles completos para que otros usuarios puedan verlo.
+                    </p>
+                </div>
             </div>
-
-            <!-- Descripción -->
-            <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+            <div class="row justify-content-center round">
+                <div class="col-lg-10 col-md-12">
+                    <div class="card shadow-lg card-1">
+                        <div class="card-body inner-card">
+                            <form th:action="@{/producto/crear}" method="post" enctype="multipart/form-data">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-5 col-md-6 col-sm-12">
+                                        <!-- Nombre -->
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="first-name">Nombre</label>
+                                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                        </div>
+                                        <!-- Descripción -->
+                                        <div class="form-outline mb-4">
+                                            <label for="descripcion">Descripción</label>
+                                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+                                        </div>
+                                        <!-- Precio -->
+                                        <div class="form-outline mb-4">
+                                            <label for="precio">Precio</label>
+                                            <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="0" required>
+                                        </div>
+                                        <!-- Descuento -->
+                                        <div class="form-outline mb-4">
+                                            <label for="descuento">Descuento (%)</label>
+                                            <input type="number" class="form-control" id="descuento" name="descuento" step="1" min="0" max="100">
+                                        </div>
+                                        <!-- Peso -->
+                                        <div class="form-outline mb-4">
+                                            <label for="peso">Peso (en Kg)</label>
+                                            <input type="number" class="form-control" id="peso" name="peso" step="any" min="0" max="100">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-md-6 col-sm-12">
+                                        <!-- Stock -->
+                                        <div class="form-outline mb-4">
+                                            <label for="stock">Stock</label>
+                                            <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+                                        </div>
+                                        <!-- Categoría -->
+                                        <div class="form-group">
+                                            <label for="categoria">Categoría</label>
+                                            <select class="form-control" id="categoria" name="categoria" required>
+                                                <option value="" disabled selected>Seleccione una categoría</option>
+                                                <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                                            </select>
+                                        </div>
+                                        <!-- Almacén -->
+                                        <div class="form-group">
+                                            <label for="almacen">Almacén</label>
+                                            <select class="form-control" id="almacen" name="almacen" required>
+                                                <option value="" disabled selected>Seleccione un almacén</option>
+                                                <option th:each="almacen : ${almacenes}" th:value="${almacen.id}" th:text="${almacen}"></option>
+                                            </select>
+                                        </div>
+                                        <!-- Subir Imágenes -->
+                                        <div class="form-group files">
+                                            <label>Subir una Imagen</label>
+                                            <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png" multiple required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Botón Enviar -->
+                                <div class="row justify-content-end mb-5">
+                                    <div class="col-lg-4 col-auto">
+                                        <button type="submit" class="btn btn-primary btn-block">
+                                            <small class="font-weight-bold">Publicar Producto</small>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Precio -->
-            <div class="mb-3">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="0" required>
-            </div>
-
-            <!-- Descuento -->
-            <div class="mb-3">
-                <label for="descuento" class="form-label">Descuento (%)</label>
-                <input type="number" class="form-control" id="descuento" name="descuento" step="1" min="0" max="100">
-            </div>
-
-            <!-- Descuento -->
-            <div class="mb-3">
-                <label for="peso" class="form-label">Peso (en Kg)</label>
-                <input type="number" class="form-control" id="peso" name="peso" step="any" min="0" max="100">
-            </div>
-
-            <!-- Stock -->
-            <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock" name="stock" min="0" required>
-            </div>
-
-            <!-- Categoría -->
-            <div class="mb-3">
-                <label for="categoria" class="form-label">Categoría</label>
-                <select class="form-select" id="categoria" name="categoria" required>
-                    <option value="" disabled selected>Seleccione una categoría</option>
-                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
-                </select>
-            </div>
-
-            <!-- Almacen -->
-            <div class="mb-3">
-                <label for="almacen" class="form-label">Almacén</label>
-                <select class="form-select" id="almacen" name="almacen" required>
-                    <option value="" disabled selected>Seleccione un almacén</option>
-                    <option th:each="almacen : ${almacenes}" th:value="${almacen.id}" th:text="${almacen}"></option>
-                </select>
-            </div>
-
-            <!-- Subir Imágenes -->
-            <div class="mb-3">
-                <label for="imagenes" class="form-label">Subir Imágenes</label>
-                <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png" multiple required>
-            </div>
-
-            <!-- Botón Enviar -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Publicar Producto</button>
-            </div>
-        </form>
+        </div>
     </div>
+
+    <script>
+        $(document).ready(function(){
+            $(".files").attr('data-before',"Drag file here or click the above button");
+            $('input[type="file"]').change(function(e){
+                var fileName = e.target.files[0].name; 
+                $(".files").attr('data-before',fileName);
+            });
+        });
+    </script>
+    <!-- MDBootstrap JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
