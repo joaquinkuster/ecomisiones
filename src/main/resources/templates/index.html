@@ -12,9 +12,60 @@
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
-    <div class="alert alert-warning" role="alert">
+    <div th:if="${mensaje != null}" class="alert alert-warning" role="alert">
         <p th:text="${mensaje}"></p>
-      </div>
+    </div>
+
+    <!-- Select de categorías -->
+    <div class="container mt-5">
+
+        <!-- Iterar sobre las categorías -->
+        <form method="post" action="/procesar">
+            <h2>Seleccionar Categoría y Subcategoría</h2>
+            <!-- Acordeón de categorías -->
+            <div class="accordion" id="accordionCategorias">
+                <th:block th:each="categoria : ${categorias}">
+                    <!-- Acordeón para cada categoría -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-${categoria.key.id}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse-${categoria.key.id}" aria-expanded="true"
+                                aria-controls="collapse-${categoria.key.id}">
+                                <span th:text="${categoria.key.nombre}"></span>
+                            </button>
+                        </h2>
+                        <div id="collapse-${categoria.key.id}" class="accordion-collapse collapse"
+                            aria-labelledby="heading-${categoria.key.id}" data-bs-parent="#accordionCategorias">
+                            <div class="accordion-body">
+                                <!-- Subcategorías de la categoría -->
+                                <select class="form-select" name="subcategoria-${categoria.key.id}">
+                                    <option value="">Seleccione una subcategoría</option>
+                                    <th:block th:each="subcategoria : ${categoria.value}">
+                                        <option th:value="${subcategoria.id}" th:text="${subcategoria.nombre}">
+                                        </option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+                <!-- Precio -->
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Menor a (en $)</label>
+                    <input type="number" class="form-control" id="precio" name="precio" step="any" min="1" max="1000000">
+                </div>
+
+                <!-- Descuento -->
+                <div class="mb-3">
+                    <label for="descuento" class="form-label">Desde (%)</label>
+                    <input type="number" class="form-control" id="descuento" name="descuento" step="any" min="1" max="100">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
+        </form>
+    </div>
 
     <!-- Sección de productos -->
     <div class="container mt-5">
@@ -32,7 +83,8 @@
                         <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
                         <p class="card-text" th:text="${producto.key.descripcion}">Descripción del producto</p>
                         <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
-                        <a th:href="@{/productos/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver Producto</a>
+                        <a th:href="@{/producto/ver/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver
+                            Producto</a>
                     </div>
                 </div>
             </div>
@@ -45,6 +97,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/index.js"></script>
 </body>
 
 </html>

@@ -36,7 +36,7 @@ public class CarritoController {
 
     // Método para mostrar el carrito de compras
     @GetMapping("/ver")
-    public String ver(Model model, Authentication auth) {
+    public String ver(Model model, Authentication auth, RedirectAttributes redirectAttributes) {
         try {
 
             Usuario usuario = (Usuario) auth.getPrincipal();
@@ -49,13 +49,14 @@ public class CarritoController {
             model.addAttribute("usuario", usuario);
             model.addAttribute("categorias", categorias);
             model.addAttribute("carrito", usuario.getCarrito());
+            model.addAttribute("total", usuario.getCarrito().calcularTotal());
 
             return "carrito";
 
         } catch (Exception e) {
 
-            System.out.println(e.getMessage());
-            return "inicio";
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            return "redirect:/inicio";
 
         }
     }
@@ -79,7 +80,7 @@ public class CarritoController {
             }
 
             if (cantidad > producto.getStock()) {
-                throw new IllegalArgumentException("No hay suficiente stock disponible.");
+                throw new IllegalArgumentException("Error! No hay suficiente stock disponible.");
             }
 
             // Agregar producto al carrito
@@ -91,17 +92,19 @@ public class CarritoController {
             producto.setStock(producto.getStock() - cantidad);
             productoService.modificar(producto);
 
-            redirectAttributes.addFlashAttribute("mensaje", "Producto agregado al carrito correctamente.");
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho! Producto agregado al carrito correctamente.");
 
             usuario.getCarrito().calcularTotal();
             carritoService.modificar(usuario.getCarrito());
             // usuario.setCarrito(carritoService.buscarPorUsuario(usuario));
 
-            return "redirect:/productos/" + id;
+            return "redirect:/producto/ver/" + id;
 
         } catch (Exception e) {
+
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
             return "redirect:/inicio";
+        
         }
     }
 
@@ -122,13 +125,13 @@ public class CarritoController {
             Set<DetalleCarrito> detalles = usuario.getCarrito().getDetalles();
 
             for (DetalleCarrito detalle : detalles) {
-                if (detalle.getMercaderia().getId() == producto.getId()) {
+                if (detalle.getProducto().getId() == producto.getId()) {
                     // Si el producto ya está en el carrito, lo eliminamos
                     detalle.marcarInactivo();
                     producto.setStock(producto.getStock() + detalle.getCantidad());
                     productoService.modificar(producto);
                     detalleCarritoService.borrar(detalle);
-                    redirectAttributes.addFlashAttribute("mensaje", "Producto eliminado del carrito correctamente.");
+                    redirectAttributes.addFlashAttribute("mensaje", "Hecho! Producto eliminado del carrito correctamente.");
                     break;
                 }
             }
@@ -138,12 +141,14 @@ public class CarritoController {
             // usuario.setCarrito(carritoService.buscarPorUsuario(usuario));
 
             return vista == null || !vista.equalsIgnoreCase("carrito")
-                    ? "redirect:/productos/" + id
+                    ? "redirect:/producto/ver/" + id
                     : "redirect:/carrito/ver";
 
         } catch (Exception e) {
+
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
             return "redirect:/inicio";
+        
         }
     }
 

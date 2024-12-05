@@ -57,11 +57,7 @@ public class Carrito {
         double total = 0;
         Set<DetalleCarrito> activos = getDetalles();
         for (DetalleCarrito detalle : activos) {
-            if (detalle.getMercaderia() instanceof Producto producto) {
-                total += detalle.getCantidad() * producto.getPrecioConDescuento();
-            } else if (detalle.getMercaderia() instanceof Paquete paquete) {
-                total += detalle.getCantidad() * paquete.calcularTotal();
-            }
+            total += detalle.getCantidad() * detalle.getProducto().getPrecioConDescuento();
         }
         return total;
     }

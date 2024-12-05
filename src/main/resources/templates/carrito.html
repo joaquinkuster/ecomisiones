@@ -35,10 +35,8 @@
 
             <!-- Total y botón de compra -->
             <div class="d-flex justify-content-between align-items-center">
-                <h3>Total: <span th:text="${carrito.total}"></span></h3>
-                <form th:action="@{/carrito/comprar/{carritoId}(carritoId=${carrito.id})}" method="post">
-                    <button type="submit" class="btn btn-success">Comprar</button>
-                </form>
+                <h3>Total: <span th:text="${total}"></span></h3>
+                <a th:href="@{/pedido/preparar}" class="btn btn-success">Comprar</a>
             </div>
         </div>
 

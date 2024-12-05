@@ -27,8 +27,8 @@ public class DetalleCarrito {
     private int cantidad;
 
     @ManyToOne
-    @JoinColumn(name = "id_mercaderia", nullable =  false)
-    private Mercaderia mercaderia;
+    @JoinColumn(name = "id_producto", nullable =  false)
+    private Producto producto;
 
     @ManyToOne
     @JoinColumn(name = "id_carrito", nullable =  false)
@@ -37,9 +37,9 @@ public class DetalleCarrito {
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public DetalleCarrito(int cantidad, Mercaderia mercaderia, Carrito carrito){
+    public DetalleCarrito(int cantidad, Producto producto, Carrito carrito){
         this.cantidad = cantidad;
-        this.mercaderia = mercaderia;
+        this.producto = producto;
         this.carrito = carrito;
     }
 
@@ -50,4 +50,4 @@ public class DetalleCarrito {
     public boolean esInactivo() {
         return baja;
     }
-}
+} 

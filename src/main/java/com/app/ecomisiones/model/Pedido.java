@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "compras")
+@Table(name = "pedidos")
 @Getter @Setter
 @NoArgsConstructor
-public class Compra {
+public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,12 @@ public class Compra {
 
     @Column(name = "total", nullable = false)
     private double total;
+
+    @Column(name = "costoEnvio", nullable = false)
+    private double costoEnvio;
+
+    @Column(name = "diasDeEspera", nullable = false)
+    private int diasDeEspera;
 
     @Column(name = "fechaCreacion", nullable = false)
     private LocalDate fechaCreacion = LocalDate.now();
@@ -43,19 +49,21 @@ public class Compra {
     @JoinColumn(name = "id_comprador", nullable = false)
     private Usuario comprador;
 
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Setter(AccessLevel.NONE)
-    private Set<DetalleCompra> detalles = new HashSet<>();
+    private Set<DetallePedido> detalles = new HashSet<>();
 
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public Compra(double total, MedioDePago medioDePago, Sucursal sucursal, Usuario comprador, LocalDate fechaLlegada) {
+    public Pedido(double total, double costoEnvio, int diasDeEspera, MedioDePago medioDePago, Sucursal sucursal, Usuario comprador, LocalDate fechaLlegada) {
         this.total = total;
+        this.costoEnvio = costoEnvio;
+        this.diasDeEspera = diasDeEspera;
         this.medioDePago = medioDePago; 
         this.sucursal = sucursal;
         this.comprador = comprador;
-        this.fechaLlegada = fechaLlegada;
+        this.fechaLlegada = fechaLlegada; 
     }
 
     public void marcarInactivo(){
@@ -66,20 +74,20 @@ public class Compra {
         return baja;
     }
 
-    public Set<DetalleCompra> getDetalles() {
+    public Set<DetallePedido> getDetalles() {
         return detalles.stream()
                 .filter(detalle -> !detalle.esInactivo())
                 .collect(Collectors.toSet());
     }
 
-    public void agregarDetalles(Set<DetalleCompra> detalles) {
-        for (DetalleCompra detalleCompra : this.detalles) {
+    public void agregarDetalles(Set<DetallePedido> detalles) {
+        for (DetallePedido detalleCompra : this.detalles) {
             detalles.add(detalleCompra);
         }
     }
 
     @Override
     public String toString(){
-        return "Compra #" + id + " " + fechaCreacion.toString();
+        return "Pedido #" + id + " " + fechaCreacion.toString();
     }
 }

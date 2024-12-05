@@ -25,42 +25,37 @@
                     </form>
                 </li>
             </ul>
-            <!-- Select de categorías -->
-            <div class="d-flex">
-                <select class="form-select me-2" aria-label="Seleccionar categoría">
-                    <option selected>Categorías</option>
-                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                        th:text="${categoria.nombre}"></option>
-                </select>
-                <!-- Botones de inicio de sesión y carrito -->
-                <!-- Enlaces del usuario -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Hola, <span th:text="${usuario.nombre}">Usuario</span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                        <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+            <!-- Botones de inicio de sesión y carrito -->
+            <!-- Enlaces del usuario -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Hola, <span th:text="${usuario.nombre}">Usuario</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                        <li><a th:href="@{/compra/misCompras}" class="dropdown-item">Mis Compras</a></li>
+                    <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
 
-                        <!-- Opción para Administrador -->
-                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
-                            <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
-                        </li>
+                    <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
 
-                        <!-- Opción para Usuario -->
-                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
-                            <a th:href="@{/productos/crear}" class="dropdown-item">Vender</a>
-                        </li>
+                    <!-- Opción para Administrador -->
+                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
+                        <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+                    </li>
 
-                        <!-- Enlace para cerrar sesión -->
-                        <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
-                    </ul>
-                </div>
-                <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito</a>
+                    <!-- Opción para Usuario -->
+                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
+                        <a th:href="@{/producto/crear}" class="dropdown-item">Vender</a>
+                    </li>
+
+                    <!-- Enlace para cerrar sesión -->
+                    <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+                </ul>
             </div>
+            <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito
+                <span th:text="${usuario.carrito.detalles.size()}"></span></a>
         </div>
+    </div>
     </div>
 </nav>

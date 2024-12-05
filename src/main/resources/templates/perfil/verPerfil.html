@@ -51,9 +51,28 @@
                 <!-- Categoría -->
                 <div class="mb-3">
                     <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
-                    <select class="form-select" id="sucursal" name="sucursal">
-                        <option value="" disabled selected>Seleccione una sucursal</option>
-                        <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}" th:text="${sucursal}">
+                    <select id="sucursal" name="sucursal" class="form-select" required>
+                        <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una sucursal</option>
+                        <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles
+                        </option>
+                        <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
+                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Almacen -->
+                <div class="mb-3">
+                    <label for="medioDePago" class="form-label">Medio de Pago Predeterminado</label>>
+                    </select>
+                    <select id="medioPago" name="medioPago" class="form-select" required>
+                        <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}"> disabled>Seleccione un medio de pago</option>
+                        <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago
+                            disponibles</option>
+                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:text="${medio.nombre}">
+                        </option>
+                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}"
+                            th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio}">
                         </option>
                     </select>
                 </div>
@@ -66,11 +85,6 @@
             <!-- Enlace para cambiar contraseña -->
             <a th:href="@{/usuarios/cambiarContrasena}" class="btn btn-danger w-100 py-2 mt-3">
                 Cambiar Contraseña
-            </a>
-
-            <!-- Enlace para agregar método de pago -->
-            <a th:href="@{/usuario/metodo-pago/{id}(id=${usuario.id})}" class="btn btn-warning w-100 py-2 mt-3">
-                Agregar Método de Pago
             </a>
         </div>
     </div>

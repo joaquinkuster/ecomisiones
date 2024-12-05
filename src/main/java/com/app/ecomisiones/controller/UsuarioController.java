@@ -12,13 +12,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.app.ecomisiones.model.Carrito;
 import com.app.ecomisiones.model.Categoria;
+import com.app.ecomisiones.model.MedioDePago;
 import com.app.ecomisiones.model.Sucursal;
 import com.app.ecomisiones.model.Usuario;
 import com.app.ecomisiones.service.Carrito.CarritoServiceImpl;
 import com.app.ecomisiones.service.Categoria.CategoriaServiceImpl;
+import com.app.ecomisiones.service.MedioDePago.MedioDePagoServiceImpl;
 import com.app.ecomisiones.service.Sucursal.SucursalServiceImpl;
 import com.app.ecomisiones.service.Usuario.UsuarioServiceImpl;
 
@@ -38,6 +41,9 @@ public class UsuarioController {
 
     @Autowired
     private SucursalServiceImpl sucursalService;
+
+    @Autowired
+    private MedioDePagoServiceImpl medioDePagoService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -77,9 +83,11 @@ public class UsuarioController {
 
         List<Categoria> categorias = categoriaService.obtenerTodo();
         List<Sucursal> sucursales = sucursalService.obtenerTodo();
+        List<MedioDePago> mediosDePagos = medioDePagoService.obtenerTodo();
 
         modelo.addAttribute("categorias", categorias);
         modelo.addAttribute("sucursales", sucursales);
+        modelo.addAttribute("mediosDePagos", mediosDePagos);
         modelo.addAttribute("usuario", (Usuario) auth.getPrincipal());
 
         return "perfil/verPerfil";
@@ -92,11 +100,13 @@ public class UsuarioController {
             @RequestParam(name = "apellido") String apellido,
             @RequestParam(name = "correo") String correo,
             @RequestParam(name = "telefono", required = false) String telefono,
-            @RequestParam(name = "sucrusal", required = false) Integer idSucursal) {
+            @RequestParam(name = "sucrusal", required = false) Integer idSucursal,
+            @RequestParam(name = "medioDePago", required = false) Integer idMedioDePago, 
+            RedirectAttributes redirectAttributes) {
+
         try {
 
             Usuario usuario = usuarioService.buscarPorId(id).orElse(null);
-
             if (usuario == null) {
                 throw new IllegalArgumentException("Error! El usuario ingresado no existe.");
             }
@@ -110,7 +120,21 @@ public class UsuarioController {
             }
 
             if (idSucursal != null) {
-                usuario.setSucursalMasCercana(sucursalService.buscarPorId(idSucursal).orElse(null));
+                Sucursal sucursal = sucursalService.buscarPorId(idSucursal).orElse(null);
+                if (sucursal == null) {
+                    throw new IllegalArgumentException("Error! La sucursal ingresada no existe.");
+                } else {
+                    usuario.setSucursalMasCercana(sucursal);
+                }
+            }
+
+            if (idMedioDePago != null) {
+                MedioDePago medioDePago = medioDePagoService.buscarPorId(idSucursal).orElse(null);
+                if (medioDePago == null) {
+                    throw new IllegalArgumentException("Error! El medio de pago ingresado no existe.");
+                } else {
+                    usuario.setMedioDePagoPredeterminado(medioDePago);
+                }
             }
 
             usuario = usuarioService.modificar(usuario);
@@ -123,7 +147,7 @@ public class UsuarioController {
 
         } catch (Exception e) {
 
-            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
             return "redirect:/usuarios/verPerfil";
 
         }

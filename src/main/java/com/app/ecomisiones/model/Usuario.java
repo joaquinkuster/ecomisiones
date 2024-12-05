@@ -53,8 +53,12 @@ public class Usuario implements UserDetails{
     @JoinColumn(name = "id_sucursal", nullable =  true)
     private Sucursal sucursalMasCercana;
 
+    @ManyToOne
+    @JoinColumn(name = "id_medioDePago", nullable =  true)
+    private MedioDePago medioDePagoPredeterminado;
+
     @OneToMany(mappedBy = "comprador", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Compra> compras = new HashSet<>();
+    private Set<Pedido> compras = new HashSet<>();
 
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
@@ -107,7 +111,7 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    public void agregarCompra(Compra compra) {
+    public void agregarCompra(Pedido compra) {
         compras.add(compra);
     }
 }

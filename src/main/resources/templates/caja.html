@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <h2>Generar Orden de Compra</h2>
-        <form th:action="@{/compra/agregar}" method="post">
+        <form th:action="@{/pedido/agregar}" method="post">
 
             <!-- Input oculto para producto.id -->
             <input type="hidden" name="producto" id="producto" th:value="${producto != null ? producto.id : ''}">
@@ -57,10 +57,12 @@
                 <div class="card-body">
                     <label for="sucursal" class="form-label">Seleccione una Sucursal</label>
                     <select id="sucursal" name="sucursal" class="form-select" required>
+                        <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una
+                            sucursal</option>
                         <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles
                         </option>
                         <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
-                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal.direccion}">
+                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}">
                         </option>
 
                     </select>
@@ -73,19 +75,57 @@
                 <div class="card-body">
                     <label for="medioPago" class="form-label">Seleccione un Medio de Pago</label>
                     <select id="medioPago" name="medioPago" class="form-select" required>
+                        <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}" disabled>Seleccione
+                            un medio de pago</option>
                         <option value="" disabled th:if="${#lists.isEmpty(mediosPago)}">No hay medios de pago
                             disponibles</option>
                         <option th:each="medio : ${mediosPago}" th:value="${medio.id}" th:text="${medio.nombre}">
                         </option>
+                        <option th:each="medio : ${mediosPago}" th:value="${medio.id}"
+                            th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio}">
+                        </option>
                     </select>
                 </div>
             </div>
+
+            <!-- Tabla de compras -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="detalle : ${detalles}">
+                        <td th:text="${detalle.key.nombre}">Nombre</td>
+                        <td th:text="${detalle.key.precio}">Precio</td>
+                        <td th:text="${detalle.value}">Cantidad</td>
+                    </tr>
+                </tbody>
+            </table>
 
             <!-- Total -->
             <div class="card mb-3">
                 <div class="card-header">Total</div>
                 <div class="card-body">
                     <p class="fs-5">Total a pagar: <span th:text="${total}"></span></p>
+                </div>
+            </div>
+
+            <!-- Mostrar Costo y Días de Espera -->
+            <div class="card mb-3">
+                <div class="card-header">Costo y Días de Espera</div>
+                <div class="card-body">
+
+                    <p class="fs-5">Costo de Envío: $
+                        <input type="text" name="costoEnvio" id="costoEnvio" th:value="${costoEnvio}" readonly>
+                    </p>
+
+                    <p class="fs-5">Días de Espera:
+                        <input type="text" name="diasEspera" id="diasEspera" th:value="${diasEspera}" readonly>
+                    </p>
                 </div>
             </div>
 
@@ -98,6 +138,32 @@
         </form>
     </div>
 
+    <script>
+        // Suponiendo que tienes acceso al producto y sucursal en el frontend
+        const productoId = document.getElementById("producto").value;  // Producto con ID que puede ser nulo
+        const sucursalSelect = document.getElementById("sucursal");
+
+        sucursalSelect.addEventListener("change", function () {
+            const sucursalId = sucursalSelect.value;  // ID de la sucursal seleccionada
+
+            if (productoId || sucursalId) {  // Asegúrate de que ambos IDs sean válidos
+                // Realizar una solicitud al backend para obtener el cálculo
+                fetch(`/pedido/calcularEnvio?sucursalId=${sucursalId}&productoId=${productoId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mostrar los resultados
+                        document.getElementById("costoEnvio").value = data.costoEnvio;
+                        document.getElementById("diasEspera").value = data.diasEspera;
+                    })
+                    .catch(error => {
+                        console.error("Error al obtener el costo de envío:", error);
+                    });
+            } else {
+                // Si no se ha seleccionado un producto o sucursal, puedes mostrar un mensaje de advertencia
+                alert("Por favor, seleccione un producto y una sucursal.");
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "detalles_compra")
+@Table(name = "detalles_pedido")
 @Getter @Setter
 @NoArgsConstructor
-public class DetalleCompra {
+public class DetallePedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,16 @@ public class DetalleCompra {
     @Column(name = "cantidad", nullable = false)
     private int cantidad;
 
+    @Column(name = "peso", nullable = false)
+    private float peso;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "medioDeEnvio", nullable = true)
+    private MedioDeEnvio medioDeEnvio;
+
     @ManyToOne
-    @JoinColumn(name = "id_compra", nullable =  false)
-    private Compra compra;
+    @JoinColumn(name = "id_pedido", nullable =  false)
+    private Pedido pedido;
 
     @ManyToOne
     @JoinColumn(name = "id_producto", nullable =  false)
@@ -30,9 +37,11 @@ public class DetalleCompra {
     @Column(name = "baja", nullable = false)
     private Boolean baja = false;
 
-    public DetalleCompra(int cantidad, Compra compra, Producto producto) {
+    public DetallePedido(int cantidad, float peso, MedioDeEnvio medioDeEnvio, Pedido pedido, Producto producto) {
         this.cantidad = cantidad;
-        this.compra = compra;
+        this.peso = peso;
+        this.medioDeEnvio = medioDeEnvio;
+        this.pedido = pedido;
         this.producto = producto;
     }
 
@@ -46,6 +55,6 @@ public class DetalleCompra {
 
     @Override
     public String toString(){
-        return compra + " ha agregado " + producto;
+        return pedido + " ha agregado " + producto;
     }
 }

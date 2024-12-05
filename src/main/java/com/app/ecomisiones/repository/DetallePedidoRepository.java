@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.app.ecomisiones.model.DetalleCompra;
+import com.app.ecomisiones.model.DetallePedido;
 
 @Repository
-public interface DetalleCompraRepository extends JpaRepository<DetalleCompra, Integer> {
-    List<DetalleCompra> findByBajaFalse();
+public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Integer> {
+    List<DetallePedido> findByBajaFalse();
 }

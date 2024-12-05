@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Publicar Producto</h1>
-        <form th:action="@{/productos/crear}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/producto/crear}" method="post" enctype="multipart/form-data">
             <!-- Nombre -->
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre del Producto</label>
@@ -34,6 +34,12 @@
                 <input type="number" class="form-control" id="descuento" name="descuento" step="1" min="0" max="100">
             </div>
 
+            <!-- Descuento -->
+            <div class="mb-3">
+                <label for="peso" class="form-label">Peso (en Kg)</label>
+                <input type="number" class="form-control" id="peso" name="peso" step="any" min="0" max="100">
+            </div>
+
             <!-- Stock -->
             <div class="mb-3">
                 <label for="stock" class="form-label">Stock</label>
@@ -46,6 +52,15 @@
                 <select class="form-select" id="categoria" name="categoria" required>
                     <option value="" disabled selected>Seleccione una categoría</option>
                     <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                </select>
+            </div>
+
+            <!-- Almacen -->
+            <div class="mb-3">
+                <label for="almacen" class="form-label">Almacén</label>
+                <select class="form-select" id="almacen" name="almacen" required>
+                    <option value="" disabled selected>Seleccione un almacén</option>
+                    <option th:each="almacen : ${almacenes}" th:value="${almacen.id}" th:text="${almacen}"></option>
                 </select>
             </div>
 
