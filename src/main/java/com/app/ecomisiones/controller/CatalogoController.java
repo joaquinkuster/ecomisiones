@@ -1,7 +1,9 @@
 package com.app.ecomisiones.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,15 @@ public class CatalogoController {
         }
 
         model.addAttribute("usuario", usuario);
-        model.addAttribute("categorias", categorias);
+        List<Categoria> sortedKeys = new ArrayList<>(categorias.keySet());
+        sortedKeys.sort(Comparator.comparing(Categoria::getNombre));
+        
+        Map<Categoria, List<Categoria>> sortedCategorias = new LinkedHashMap<>();
+        for (Categoria key : sortedKeys) {
+            sortedCategorias.put(key, categorias.get(key));
+        }
+
+        model.addAttribute("categorias", sortedCategorias);
         return "catalogo";
     }
 
