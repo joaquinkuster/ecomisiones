@@ -110,9 +110,14 @@ public class AdminController {
                 throw new IllegalArgumentException("Error! El almacen ingresado no existe.");
 
             }
-            
+
             if (descripcion.length() > 500) {
                 throw new IllegalArgumentException("Error! La descripción no puede tener más de 500 caracteres.");
+            }
+
+            //haceme un limite de caracteres para el nombre del producto en 50
+            if (nombre.length() > 50) {
+                throw new IllegalArgumentException("Error! El nombre del producto no puede tener más de 50 caracteres.");
             }
 
             Producto producto = productoService
