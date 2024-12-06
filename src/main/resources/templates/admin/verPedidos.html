@@ -5,7 +5,20 @@
     <title>Ver Compras</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@5.0.0/dist/css/mdb.min.css">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@5.0.0/dist/css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@5.0.0/dist/css/mdb.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <!-- Font Awesome (para íconos) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -21,7 +34,7 @@
         </div>
 
         <!-- Tabla de compras -->
-        <table th:if="${!pedidos.empty}" class="table table-bordered">
+        <table th:if="${!pedidos.empty}" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Compra</th>
@@ -48,7 +61,6 @@
                             </p>
                         </div>
                     </td>
-
                     <td th:text="${compra.medioDePago.nombre}">Medio de pago</td>
                     <td th:text="${compra.sucursal.direccion}">Sucursal</td>
                 </tr>
@@ -57,7 +69,8 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MDBootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@5.0.0/dist/js/mdb.min.js"></script>
 </body>
 
 </html>

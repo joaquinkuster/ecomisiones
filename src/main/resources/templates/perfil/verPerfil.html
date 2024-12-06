@@ -5,7 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar Usuario</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <!-- Font Awesome (para íconos) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -14,7 +24,7 @@
 
     <!-- Contenedor centralizado -->
     <div class="d-flex justify-content-center align-items-center min-vh-100">
-        <div class="bg-white shadow-lg rounded p-4 w-100" style="max-width: 400px;">
+        <div class="bg-white shadow-lg rounded p-4 w-100" style="max-width: 500px;">
             <h2 class="text-center h3 font-weight-bold text-dark mb-4">Actualizar Usuario</h2>
 
             <!-- Formulario de Actualización -->
@@ -48,32 +58,26 @@
                         placeholder="+54 9 11 1234-5678">
                 </div>
 
-                <!-- Categoría -->
+                <!-- Sucursal Más Cercana -->
                 <div class="mb-3">
                     <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
-                    <select id="sucursal" name="sucursal" class="form-select">
+                    <select id="sucursal" name="sucursal" class="form-select" required>
                         <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una sucursal</option>
-                        <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles
-                        </option>
+                        <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales disponibles</option>
                         <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
-                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}">
-                        </option>
+                            th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}"></option>
                     </select>
                 </div>
 
-                <!-- Almacen -->
+                <!-- Medio de Pago Predeterminado -->
                 <div class="mb-3">
-                    <label for="medioDePago" class="form-label">Medio de Pago Predeterminado</label>
-                    </select>
-                    <select id="medioPago" name="medioPago" class="form-select">
+                    <label for="medioPago" class="form-label">Medio de Pago Predeterminado</label>
+                    <select id="medioPago" name="medioPago" class="form-select" required>
                         <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}" disabled>Seleccione un medio de pago</option>
-                        <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago
-                            disponibles</option>
-                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:text="${medio.nombre}">
-                        </option>
+                        <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago disponibles</option>
+                        <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}" th:text="${medio.nombre}"></option>
                         <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}"
-                            th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio}">
-                        </option>
+                            th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}" th:text="${medio}"></option>
                     </select>
                 </div>
 
@@ -89,8 +93,8 @@
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
 </body>
 
 </html>

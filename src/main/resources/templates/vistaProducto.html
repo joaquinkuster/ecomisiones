@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${producto.nombre}">Producto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
     <style>
         .product-image {
             max-height: 400px;
@@ -16,14 +17,21 @@
         }
 
         .product-thumbnail {
-            max-height: 100px;
+            max-height: 80px;
             object-fit: contain;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .slider img {
+            width: 100px;
+            height: auto;
             cursor: pointer;
         }
     </style>
 </head>
 
-<body>
+<body style="background-color: #f0eeee;">
 
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
@@ -32,144 +40,105 @@
         <p th:text="${mensaje}"></p>
     </div>
 
-    <div class="container mt-5">
-        <!-- Detalles del Producto -->
-        <div class="row">
-            <div class="col-md-6">
-                <!-- Imagen Principal -->
-                <img th:if="${!imagenes.isEmpty()}" th:src="'data:image/png;base64,' + ${imagenes[0]}"
-                    class="product-image img-fluid" id="mainImage" alt="Imagen del producto">
-                <p th:if="${imagenes.isEmpty()}">No hay imágenes disponibles</p>
+    <div class="container py-5 h-100">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="row">
+                    <!-- Columna de imágenes -->
+                    <div class="col-lg-6">
+                        <img th:if="${!imagenes.isEmpty()}" 
+                             th:src="'data:image/png;base64,' + ${imagenes[0]}" 
+                             class="product-image img-fluid mb-3 rounded" id="mainImage" alt="Imagen del producto">
+                        <p th:if="${imagenes.isEmpty()}">No hay imágenes disponibles</p>
+                        <div class="d-flex mt-3">
+                            <div th:each="imagen : ${imagenes}" class="me-2">
+                                <img th:src="'data:image/png;base64,' + ${imagen}" 
+                                     class="product-thumbnail rounded shadow-sm" 
+                                     alt="Imagen miniatura" 
+                                     onclick="document.getElementById('mainImage').src = this.src">
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Miniaturas para cambiar imágenes -->
-                <div class="d-flex mt-3">
-                    <div th:each="imagen : ${imagenes}">
-                        <img th:src="'data:image/png;base64,' + ${imagen}" class="product-thumbnail me-2"
-                            alt="Imagen miniatura" onclick="document.getElementById('mainImage').src = this.src"
-                            width="50" height="50">
+                    <!-- Detalles del producto -->
+                    <div class="col-lg-6">
+                        <h3 th:text="${producto.nombre}" class="mb-3"></h3>
+                        <p th:text="${producto.descripcion}"></p>
+                        <p>
+                            <strong>Precio:</strong> <span th:text="'$' + ${producto.precio}"></span>
+                        </p>
+                        <p>
+                            <strong>Descuento:</strong> <span th:text="${producto.descuento} + '%'"></span>
+                        </p>
+                        <p>
+                            <strong>Precio con descuento:</strong> 
+                            <span th:text="'$' + (${producto.precio} * (1 - ${producto.descuento} / 100))"></span>
+                        </p>
+                        <p>
+                            <strong>Stock:</strong> <span th:text="${producto.stock}"></span>
+                        </p>
+                        <p>
+                            <strong>Categoría:</strong> <span th:text="${producto.categoria.nombre}"></span>
+                        </p>
+
+                        <!-- Formulario para agregar al carrito -->
+                        <form th:action="@{/carrito/agregar/{id}(id=${producto.id})}" method="post" id="formularioProducto">
+                            <div class="d-flex align-items-center mb-3">
+                                <label for="cantidad" class="form-label me-3">Cantidad:</label>
+                                <input type="number" class="form-control w-25" 
+                                       id="cantidad" name="cantidad" min="1" 
+                                       th:attr="max=${producto.stock}" value="1">
+                            </div>
+                            <input type="hidden" name="producto" id="producto" th:value="${producto.id}">
+
+                            <!-- Botones -->
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-success me-2"
+                                    onclick="enviarFormulario('/pedido/preparar')">Comprar</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span th:text="${!estaEnCarrito ? 'Agregar al carrito' : 'Eliminar del carrito'}"></span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <h1 th:text="${producto.nombre}"></h1>
-                <p th:text="${producto.descripcion}"></p>
-
-                <p>
-                    <strong>Precio: </strong>
-                    <span th:text="'$' + ${producto.precio}"></span>
-                </p>
-                <p>
-                    <strong>Descuento: </strong>
-                    <span th:text="${producto.descuento} + '%'"></span>
-                </p>
-                <p>
-                    <strong>Precio con descuento: </strong>
-                    <span th:text="'$' + (${producto.precio} * (1 - ${producto.descuento} / 100))"></span>
-                </p>
-                <p>
-                    <strong>Stock: </strong>
-                    <span th:text="${producto.stock}"></span>
-                </p>
-
-                <p>
-                    <strong>Categoría: </strong>
-                    <span th:text="${producto.categoria.nombre}"></span>
-                </p>
-
-                <!-- Define a Thymeleaf variable for the URL -->
-                <span
-                    th:with="actionUrl=${!estaEnCarrito} ? '/carrito/agregar/' + ${producto.id} : '/carrito/eliminar/' + ${producto.id}">
-
-
-                    <form th:action="@{${actionUrl}}" method="post" id="formularioProducto">
-                        <!-- Incrementador de Unidades -->
-                        <div class="d-flex align-items-center mb-3">
-                            <label for="cantidad" class="form-label me-3">Cantidad:</label>
-                            <input type="number" class="form-control" id="cantidad" name="cantidad" min="1"
-                                th:attr="max=${producto.stock}" value="1" style="width: 80px;">
-                        </div>
-
-                        <input type="hidden" name="producto" id="producto" th:value="${producto.id}">
-
-                        <!-- Botón para Comprar -->
-                        <a href="#" class="btn btn-success" onclick="enviarFormulario('/pedido/preparar')">Comprar</a>
-
-                        <button type="submit" class="btn btn-primary">
-                            <span th:text="${!estaEnCarrito ? 'Agregar al carrito' : 'Eliminar del carrito'}"></span>
-                        </button>
-                    </form>
-
-
-            </div>
-        </div>
-
-        <!-- Productos Relacionados -->
-        <div class="mt-5">
-            <h3>Productos Relacionados</h3>
-            <a class="btn btn-info btn-sm" th:href="@{'/producto/filtrar?categoria=' + ${producto.categoria.id}}">Ver más</a>
-            <div class="slider">
-                <div th:each="relacionado : ${relacionados}" class="p-2">
-                    <div class="card" style="width: 18rem;">
-                        <img th:src="'data:image/png;base64,' + ${relacionado.value[0]}" class="card-img-top"
-                            th:alt="${relacionado.key.nombre}">
-
-                        <div class=" card-body">
-                            <h5 class="card-title" th:text="${relacionado.key.nombre}"></h5>
-                            <p class="card-text" th:text="'$' + ${relacionado.key.precio}"></p>
-                            <a th:href="@{/producto/ver/{id}(id=${relacionado.key.id})}" class="btn btn-primary">Ver
-                                Producto</a>
+                <!-- Productos Relacionados -->
+                <div class="mt-5">
+                    <h4>Productos Relacionados</h4>
+                    <a class="btn btn-info btn-sm mb-3" 
+                       th:href="@{'/producto/filtrar?categoria=' + ${producto.categoria.id}}">Ver más</a>
+                    <div class="row">
+                        <div th:each="relacionado : ${relacionados}" class="col-md-3">
+                            <div class="card mb-3">
+                                <img th:src="'data:image/png;base64,' + ${relacionado.value[0]}" 
+                                     class="card-img-top" th:alt="${relacionado.key.nombre}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${relacionado.key.nombre}"></h5>
+                                    <p class="card-text" th:text="'$' + ${relacionado.key.precio}"></p>
+                                    <a th:href="@{/producto/ver/{id}(id=${relacionado.key.id})}" 
+                                       class="btn btn-primary btn-sm">Ver Producto</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-
-        <!-- Sección de Comentarios
-    <div class="mt-5">
-        <h3>Comentarios</h3>
-        <ul class="list-group mb-3">
-            <li th:each="comentario : ${producto.comentarios}" class="list-group-item">
-                <strong th:text="${comentario.usuario.nombre}"></strong>:
-                <span th:text="${comentario.texto}"></span>
-            </li>
-        </ul>
-
-        <form th:action="@{/productos/{id}/comentarios(id=${producto.id})}" method="post">
-            <div class="mb-3">
-                <label for="comentario" class="form-label">Añadir Comentario</label>
-                <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-    </div>
-    -->
     </div>
 
-    <!-- Bootstrap y Slick JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <!-- MDBootstrap JS -->
+    <script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
     <script>
-        // Inicializar slider
-
         function enviarFormulario(actionUrl) {
             const form = document.getElementById('formularioProducto');
-            form.action = actionUrl; // Cambia la acción del formulario dinámicamente
-            form.method = 'get'; // Cambia el método a GET
-            form.submit(); // Envía el formulario
+            form.action = actionUrl;
+            form.method = 'get';
+            form.submit();
         }
-
-        $(document).ready(function () {
-            $('.slider').slick({
-                infinite: true,
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                arrows: true,
-                dots: true
-            });
-        });
     </script>
 </body>
 

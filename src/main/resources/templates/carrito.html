@@ -4,10 +4,19 @@
     <title>Carrito de Compras</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <!-- Font Awesome (para íconos) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
+<body style="background-color: #f0eeee;">
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
@@ -18,7 +27,7 @@
             <!-- Lista de productos en el carrito -->
             <ul class="list-group mb-4">
                 <li th:each="detalle : ${carrito.detalles}"
-                    class="list-group-item d-flex justify-content-between align-items-center">
+                    class="list-group-item d-flex justify-content-between align-items-center shadow-0">
                     <div>
                         <span th:text="${detalle.producto.nombre}"></span><br>
                         <span class="text-muted" th:text="${detalle.producto.precio}"></span>
@@ -51,6 +60,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+    
 </body>
 
 </html>

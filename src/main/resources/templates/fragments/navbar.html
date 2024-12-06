@@ -1,59 +1,126 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/inicio}">EcoMisiones</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/inicio}">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/catalogo/ver}">Catálogo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/acercaDe}">Acerca de</a>
-                </li>
-                <li class="nav-item">
-                    <!-- Buscador -->
-                    <form class="d-flex" th:action="@{/producto/filtrar}" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Buscar productos" name="nombre" id="nombre"
-                            aria-label="Buscar">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </form>
-                </li>
-            </ul>
+<!-- Incluye los estilos y scripts necesarios para MDBootstrap -->
+<head>
+    <!-- MDB CSS -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet" /> -->
+    <!-- Font Awesome (para íconos) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
 
-            <!-- Botones de inicio de sesión y carrito -->
-            <!-- Enlaces del usuario -->
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Hola, <span th:text="${usuario.nombre}">Usuario</span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+        <div class="container-fluid">
 
-                    <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+            <!-- Logo -->
+            <a class="navbar-brand" th:href="@{/inicio}">
+                <img src="https://i.imgur.com/QpPFWjs.png" alt="Logo EcoMisiones" height="40"
+                    class="d-inline-block align-text-top" defer>
+            </a>
 
-                    <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
+            <!-- Botón de menú responsivo -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
 
-                    <!-- Opción para Administrador -->
-                    <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
-                        <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+            <!-- Contenido del navbar -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- Enlaces de navegación -->
+                <ul class="navbar-nav me-3 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/inicio}">Inicio</a>
                     </li>
-
-                    <!-- Enlace para cerrar sesión -->
-                    <a href="#" class="dropdown-item btnLogout" id="btnLogout" pag-redirect="/logout">Cerrar sesión</a>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/catalogo/ver}">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/acercaDe}">Acerca de</a>
+                    </li>
                 </ul>
+
+                <!-- Barra de búsqueda -->
+                <form class="d-flex align-items-center" th:action="@{/producto/filtrar}" method="get">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Buscar productos" name="nombre"
+                            id="nombre" aria-label="Buscar">
+                        <!-- <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-mdb-toggle="dropdown"
+                            aria-expanded="false">Categorías</button>
+                        <ul class="dropdown-menu">
+                            <li th:each="categoria : ${categorias}">
+                                <a class="dropdown-item" th:href="@{'/categoria/' + ${categoria.id}}"
+                                    th:text="${categoria.nombre}"></a>
+                            </li>
+                        </ul> -->
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <a class="btn btn-outline-success" th:href="@{/carrito/ver}" role="button">Mi carrito
-                <span th:text="${usuario.carrito.detalles.size()}"></span></a>
+
+            <!-- Sección derecha (Carrito y perfil) -->
+            <div class="d-flex align-items-center">
+
+                <!-- Carrito -->
+                <a th:href="@{/carrito/ver}" class="text-reset me-3 position-relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <!-- <span class="badge badge-notification" th:text="${usuario.carrito.detalles.size()}">0</span> -->
+                </a>
+
+                <!-- Menú desplegable del usuario -->
+                <div class="dropdown">
+                    <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" role="button"
+                        data-mdb-toggle="dropdown" aria-expanded="false">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="30"
+                            alt="Avatar" loading="lazy" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+                        <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
+                            <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+                        </li>
+                        <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+                <!-- Profile Dropdown -->
+                <!-- <div class="dropdown">
+                    <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" role="button"
+                        data-mdb-toggle="dropdown" aria-expanded="false">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="30"
+                            alt="Avatar" loading="lazy" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a th:href="@{/usuarios/verPerfil}" class="dropdown-item">Ir al Perfil</a></li>
+
+                        <li><a th:href="@{/pedido/misPedidos}" class="dropdown-item">Mis Pedidos</a></li>
+
+                        Opción para Administrador 
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Administrador')}">
+                            <a th:href="@{/admin}" class="dropdown-item">Gestionar</a>
+                        </li>
+
+                        Opción para Usuario 
+                        <li th:if="${usuario.rol.name().equalsIgnoreCase('Usuario')}">
+                            <a th:href="@{/producto/crear}" class="dropdown-item">Vender</a>
+                        </li>
+                        <li><a class="dropdown-item" th:href="@{/logout}">Cerrar sesión</a></li>
+                    </ul>
+                </div> -->
+            </div>
         </div>
-    </div>
-    </div>
-</nav>
+    </nav>
+
+    <!-- Scripts necesarios -->
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <!-- MDB JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+    <!-- MDBootstrap JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+</body>

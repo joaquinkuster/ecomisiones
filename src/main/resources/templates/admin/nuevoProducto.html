@@ -5,83 +5,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Producto</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome para íconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body class="bg-light">
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">Publicar Producto</h1>
-        <form th:action="@{/admin/agregarProducto}" method="post" enctype="multipart/form-data">
-            <!-- Nombre -->
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
-            </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/admin/agregarProducto}" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Nombre -->
+                            <div class="mb-4">
+                                <label for="nombre" class="form-label">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
 
-            <!-- Descripción -->
-            <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
-            </div>
+                            <!-- Descripción -->
+                            <div class="mb-4">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+                            </div>
 
-            <!-- Precio -->
-            <div class="mb-3">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="0" required>
-            </div>
+                            <!-- Precio -->
+                            <div class="mb-4">
+                                <label for="precio" class="form-label">Precio</label>
+                                <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="0" required>
+                            </div>
 
-            <!-- Descuento -->
-            <div class="mb-3">
-                <label for="descuento" class="form-label">Descuento (%)</label>
-                <input type="number" class="form-control" id="descuento" name="descuento" step="1" min="0" max="100">
-            </div>
+                            <!-- Descuento -->
+                            <div class="mb-4">
+                                <label for="descuento" class="form-label">Descuento (%)</label>
+                                <input type="number" class="form-control" id="descuento" name="descuento" step="1" min="0" max="100">
+                            </div>
 
-            <!-- Descuento -->
-            <div class="mb-3">
-                <label for="peso" class="form-label">Peso (en Kg)</label>
-                <input type="number" class="form-control" id="peso" name="peso" step="any" min="0" max="100">
-            </div>
+                            <!-- Peso -->
+                            <div class="mb-4">
+                                <label for="peso" class="form-label">Peso (en Kg)</label>
+                                <input type="number" class="form-control" id="peso" name="peso" step="any" min="0" max="100">
+                            </div>
 
-            <!-- Stock -->
-            <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock" name="stock" min="0" required>
-            </div>
+                            <!-- Stock -->
+                            <div class="mb-4">
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+                            </div>
 
-            <!-- Categoría -->
-            <div class="mb-3">
-                <label for="categoria" class="form-label">Categoría</label>
-                <select class="form-select" id="categoria" name="categoria" required>
-                    <option value="" disabled selected>Seleccione una categoría</option>
-                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                        th:text="${categoria.nombre}"></option>
-                </select>
-            </div>
+                            <!-- Categoría -->
+                            <div class="mb-4">
+                                <label for="categoria" class="form-label">Categoría</label>
+                                <select class="form-select" id="categoria" name="categoria" required>
+                                    <option value="" disabled selected>Seleccione una categoría</option>
+                                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+                                        th:text="${categoria.nombre}"></option>
+                                </select>
+                            </div>
 
-            <!-- Almacen -->
-            <div class="mb-3">
-                <label for="almacen" class="form-label">Almacén</label>
-                <select class="form-select" id="almacen" name="almacen" required>
-                    <option value="" disabled selected>Seleccione un almacén</option>
-                    <option th:each="almacen : ${almacenes}" th:value="${almacen.id}" th:text="${almacen}"></option>
-                </select>
-            </div>
+                            <!-- Almacén -->
+                            <div class="mb-4">
+                                <label for="almacen" class="form-label">Almacén</label>
+                                <select class="form-select" id="almacen" name="almacen" required>
+                                    <option value="" disabled selected>Seleccione un almacén</option>
+                                    <option th:each="almacen : ${almacenes}" th:value="${almacen.id}" th:text="${almacen}"></option>
+                                </select>
+                            </div>
+                        </div>
 
-            <!-- Subir Imágenes -->
-            <div class="mb-3">
-                <label for="imagenes" class="form-label">Subir Imágenes</label>
-                <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png"
-                    multiple required>
-            </div>
+                        <div class="col-md-4">
+                            <!-- Subir Imágenes -->
+                            <div class="mb-4">
+                                <label for="imagenes" class="form-label">Subir Imágenes</label>
+                                <div class="border p-4 rounded bg-light text-center" style="height: 300px;">
+                                    <input type="file" class="form-control" id="imagenes" name="imagenes" accept=".jpg, .jpeg, .png"
+                                        multiple required onchange="previewImage(event)">
+                                    <img id="preview" src="#" alt="Previsualización de la imagen" class="img-fluid mt-3" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Botón Enviar -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Publicar Producto</button>
+                    <!-- Botón Enviar -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Publicar Producto</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -89,9 +106,19 @@
         <p>&copy; 2024 EcoMisiones. Todos los derechos reservados.</p>
     </footer>
 
-
-    <!-- Incluir el fragmento navbar -->
-    <div th:insert="~{fragments/scripts :: scripts}"></div>
+    <!-- MDBootstrap 5 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
 
 </html>
