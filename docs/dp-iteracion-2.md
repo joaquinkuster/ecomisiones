@@ -28,13 +28,13 @@
 
 - *Caso de Uso:*  
 
-  ### Caso de Uso 1: Compra por paquetes de varios productos (Carrito de compras)  
+  ### Caso de Uso 1: Comprar por paquetes varios productos (Carrito de compras)  
   **Actores:** Cliente  
   **Propósito:** Permite al cliente agregar varios productos al carrito y completar la compra en una sola transacción, optimizando el proceso de compra.  
   **Precondición:** El cliente debe haber seleccionado al menos un producto en la tienda.  
   **Postcondición:** El cliente ha completado la compra y el stock de los productos se ha actualizado.  
 
-  ### Caso de Uso 2: Buscador de productos  
+  ### Caso de Uso 2: Buscar productos  
   **Actores:** Cliente  
   **Propósito:** Permite al cliente buscar productos filtrados por categorías, precio y descuento, facilitando la búsqueda de productos específicos.  
   **Precondición:** El cliente debe estar en la página de búsqueda de productos.  
@@ -46,13 +46,13 @@
   **Precondición:** El administrador debe haber iniciado sesión en el sistema.  
   **Postcondición:** El administrador tiene acceso a una lista completa de pedidos, con detalles de productos, cliente, envío y coste.  
 
-  ### Caso de Uso 4: Búsqueda de productos destacados  
+  ### Caso de Uso 4: Buscar productos destacados  
   **Actores:** Cliente  
   **Propósito:** Permite al cliente ver productos destacados según el número de ventas, ayudándole a conocer los más populares.  
   **Precondición:** El cliente debe estar en la página de búsqueda de productos destacados.  
   **Postcondición:** El cliente ve una lista de productos destacados, con sus detalles básicos y ventas acumuladas.  
 
-  ### Caso de Uso 5: Validaciones en formularios clave  
+  ### Caso de Uso 5: Validar formularios   
   **Actores:** Cliente, Administrador  
   **Propósito:** Permite validar correctamente los formularios de registro, alta de productos y carrito para evitar errores e inconsistencias.  
   **Precondición:** El cliente o administrador debe estar completando un formulario en el sistema (registro, alta de producto o carrito).  
