@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+
+        <h2 class="fw-bold border-bottom border-black border-4 pb-2">Acerca De</h2>
+
+        <div class="mt-5">
+            <p class="fs-6">
+                Somos el <strong>Grupo A</strong> de la Asignatura <strong>Programación Orientada a Objetos 2 (POO 2)</strong> de la 
+                <span class="fw-bold">Universidad Nacional de Misiones</span>.
+            </p>
+            <p class="fs-6">
+                <strong>Integrantes:</strong> Küster Joaquín, Martínez Lázaro Ezequiel, Bialy Liam Tobias.
+            </p>
+            <p class="fs-6">
+                Este sitio web es nuestro <strong>proyecto integrador</strong>, en el cual aplicamos los conocimientos adquiridos durante el curso.
+            </p>
+        </div>
+        
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+
+</body>
+
+</html>

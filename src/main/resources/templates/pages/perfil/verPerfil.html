@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+    <!-- Navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+        <!-- Mensaje de alerta -->
+        <div th:if="${mensaje != null}" class="alert alert-primary alert-dismissible fade show" role="alert">
+            <p th:text="${mensaje}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <h2 class="fw-bold text-dark mb-4">Actualizar Perfil</h2>
+
+        <div class="card">
+            <!-- Formulario -->
+            <div class="card-body">
+                <form th:action="@{/usuario/modificar/{id}(id=${usuario.id})}" method="post" id="formPerfil"
+                    novalidate>
+                    <div class="row g-3">
+
+                        <!-- Nombre -->
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                placeholder="Inserte su nombre" th:value="${usuario.nombre}" required>
+                            <div class="form-text text-danger" id="nombreError"></div>
+                        </div>
+
+                        <!-- Apellido -->
+                        <div class="col-md-6">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido"
+                                placeholder="Inserte su apellido" th:value="${usuario.apellido}" required>
+                            <div class="form-text text-danger" id="apellidoError"></div>
+                        </div>
+
+                        <!-- Correo Electrónico -->
+                        <div class="col-md-6">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo"
+                                placeholder="prueba@gmail.com" th:value="${usuario.correo}" required>
+                            <div class="form-text text-danger" id="correoError"></div>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono"
+                                placeholder="+54 9 11 1234-5678" th:value="${usuario.telefono}">
+                            <div class="form-text text-danger" id="telefonoError"></div>
+                        </div>
+
+                        <!-- Sucursal Más Cercana -->
+                        <div class="col-md-6">
+                            <label for="sucursal" class="form-label">Sucursal Más Cercana</label>
+                            <select id="sucursal" name="sucursal" class="form-select">
+                                <option value="" disabled th:selected="${usuario.sucursalMasCercana == null}">Seleccione
+                                    una sucursal</option>
+                                <option value="" disabled th:if="${#lists.isEmpty(sucursales)}">No hay sucursales
+                                    disponibles</option>
+                                <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
+                                    th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}"
+                                    th:text="${sucursal}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Medio de Pago Predeterminado -->
+                        <div class="col-md-6">
+                            <label for="medioPago" class="form-label">Medio de Pago Predeterminado</label>
+                            <select id="medioPago" name="medioPago" class="form-select">
+                                <option value="" disabled th:selected="${usuario.medioDePagoPredeterminado == null}">
+                                    Seleccione un medio de pago</option>
+                                <option value="" disabled th:if="${#lists.isEmpty(mediosDePagos)}">No hay medios de pago
+                                    disponibles</option>
+                                <option th:each="medio : ${mediosDePagos}" th:value="${medio.id}"
+                                    th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}"
+                                    th:text="${medio}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <!-- Botón de actualización -->
+                        <button type="submit" class="btn btn-primary">
+                            Actualizar
+                        </button>
+                        <!-- Enlace para cambiar contraseña -->
+                        <a th:href="@{/usuario/cambiarContrasena}" class="btn btn-danger ms-2">
+                            Cambiar Contraseña
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

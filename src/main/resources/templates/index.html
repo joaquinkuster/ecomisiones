@@ -1,54 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoMisiones</title>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
-    <!-- Font Awesome (para íconos) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <!-- MDBootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet" />
-    <!-- Font Awesome para íconos -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .card:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s;
-        }
-
-        .carousel-inner img {
-            width: 100%;
-            height: 50vh;
-            object-fit: cover;
-        }
-
-        .carousel-indicators button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #007bff;
-        }
-
-        .carousel-indicators .active {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
 
 <body style="background-color: #f0eeee;">
     <!-- Incluir el fragmento navbar -->
     <div th:insert="~{fragments/navbar :: navbar}"></div>
-
-    <!-- Mostrar mensajes si existen -->
-    <div th:if="${mensaje != null}" class="alert alert-warning alert-dismissible fade show" role="alert">
-        <p th:text="${mensaje}"></p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 
     <!-- Carousel de bienvenida -->
     <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-mdb-ride="carousel">
@@ -61,12 +19,13 @@
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%282%29.jpg"
-                    class="d-block w-100" alt="Slide 1" >
+                    class="d-block w-100" alt="Slide 1">
                 <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
                 <div class="carousel-caption d-none d-sm-block mb-5">
                     <h1 class="mb-4"><strong>Bienvenido a EcoMisiones</strong></h1>
-                    <p><strong>Conecta productos con el mejor precio</strong></p>
-                    <a href="#productos" class="btn btn-outline-white btn-lg">Últimos lanzamientos</a>
+                    <p><strong>Compra tus productos al mejor precio!</strong></p>
+                    <a th:href="@{/producto/buscarRecientes}" class="btn btn-outline-white btn-lg">Últimos
+                        Lanzamientos</a>
                 </div>
             </div>
             <div class="carousel-item">
@@ -75,7 +34,9 @@
                 <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
                 <div class="carousel-caption d-none d-sm-block mb-5">
                     <h1 class="mb-4"><strong>Gracias por visitar nuestro sitio</strong></h1>
-                    <p><strong>Descubre los mejores productos</strong></p>
+                    <p><strong>Descubre los mejores productos!</strong></p>
+                    <a th:href="@{/producto/buscarUltimosDisponibles}" class="btn btn-outline-white btn-lg">Últimos
+                        Disponibles</a>
                 </div>
             </div>
         </div>
@@ -93,16 +54,25 @@
 
     <!-- Formulario de filtrado -->
     <div class="container mt-5">
-        <form method="get" th:action="@{/producto/filtrar}">
+
+        <!-- Mostrar mensajes si existen -->
+        <div th:if="${mensaje != null}" class="alert alert-primary alert-dismissible fade show" role="alert">
+            <p th:text="${mensaje}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <form method="get" th:action="@{/producto/filtrar}" class="mt-5">
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="categoria" class="form-label">Categoría</label>
                     <select id="categoria" name="categoria" class="form-select">
-                        <option value="" disabled selected>Seleccione</option>
+                        <option value="" disabled selected>Seleccione una Categoría</option>
                         <th:block th:each="entry : ${categorias}">
-                            <option th:value="${entry.key.id}" th:text="${entry.key.nombre}" disabled></option>
+                            <option th:value="${entry.key.id}" th:text="${entry.key.nombre}" class="text-bg-light"
+                                disabled></option>
                             <th:block th:each="subcategoria : ${entry.value}">
-                                <option th:value="${subcategoria.id}" th:text="'— ' + ${subcategoria.nombre}"></option>
+                                <option th:value="${subcategoria.id}" th:text="'➧ ' + ${subcategoria.nombre}">
+                                </option>
                             </th:block>
                         </th:block>
                     </select>
@@ -118,87 +88,46 @@
             </div>
             <button type="submit" class="btn btn-primary">Filtrar</button>
         </form>
-    </div>
 
-    <!-- Productos destacados -->
-    <section id="productos" class="container mt-5">
-        <h2 class="text-center mb-4">Productos destacados</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col" th:each="producto : ${destacados}">
-                <div class="card h-100 shadow-3-strong">
-                    <div th:each="imagen : ${producto.value}"> <img
-                        th:src="'data:image/png;base64,' + ${imagen}" class="card-img-top"
-                        alt="Imagen del producto"> </div>
-                    <div class="card-body">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${producto.key.nombre}">Nombre</h5>
-                        <p class="card-text" th:text="${producto.key.descripcion}">Descripción</p>
-                        <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
-                        <a th:href="@{/producto/ver/{id}(id=${producto.key.id})}" class="btn btn-primary">Ver Producto</a>
-                    </div>
+        <div th:if="${destacados.size() >= 3}" class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold">Productos Destacados</h2>
+                <a class="btn btn-outline-primary btn-sm rounded-pill px-4" th:href="@{/producto/buscarMasVendidos}">
+                    Ver Más
+                </a>
+            </div>
+            <!-- Slider con más espacio vertical y cartas centradas usando clases de Bootstrap -->
+            <div class="slider d-flex justify-content-center align-items-center" style="min-height: 500px;">
+                <div th:each="producto : ${destacados}" class="p-3">
+                    <!-- Carta Producto -->
+                    <div th:insert="~{fragments/cartaProducto :: cartaProducto}"></div>
                 </div>
             </div>
         </div>
-        <h2 class="mb-4">Ultimos productos ecológicos</h2>
-            <div id="productCarousel" class="carousel slide" data-mdb-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row row-cols-1 row-cols-md-3 g-4">
-                            <div class="col" th:each="producto : ${productos}">
-                                <div class="card h-100 shadow-3-strong">
-                                    <div th:each="imagen : ${producto.value}"> <img
-                                        th:src="'data:image/png;base64,' + ${imagen}" class="card-img-top"
-                                        alt="Imagen del producto"> </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title" th:text="${producto.key.nombre}">Nombre del producto</h5>
-                                        <p class="card-text" th:text="${producto.key.descripcion}">Descripción del
-                                            producto</p>
-                                        <p class="card-text"><strong th:text="${producto.key.precio}">$0.00</strong></p>
 
-                                        <a th:href="@{/producto/ver/{id}(id=${producto.key.id})}"
-                                            class="btn btn-primary">Ver
-                                            Producto</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- Añadir más items del carrusel aquí -->
-                </div> <button class="carousel-control-prev" type="button" data-mdb-target="#productCarousel"
-                    data-mdb-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span
-                        class="visually-hidden">Anterior</span> </button> <button class="carousel-control-next"
-                    type="button" data-mdb-target="#productCarousel" data-mdb-slide="next"> <span
-                        class="carousel-control-next-icon" aria-hidden="true"></span> <span
-                        class="visually-hidden">Siguiente</span> </button>
+        <div th:if="${recientes.size() >= 3}" class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold">Últimos Lanzamientos</h2>
+                <a class="btn btn-outline-primary btn-sm rounded-pill px-4" th:href="@{/producto/buscarRecientes}">
+                    Ver Más
+                </a>
             </div>
-    </section>
+            <!-- Slider con más espacio vertical y cartas centradas usando clases de Bootstrap -->
+            <div class="slider d-flex justify-content-center align-items-center" style="min-height: 500px;">
+                <div th:each="producto : ${recientes}" class="p-3">
+                    <!-- Carta Producto -->
+                    <div th:insert="~{fragments/cartaProducto :: cartaProducto}"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <!-- Footer -->
-    <footer class="text-center mt-5 py-3 bg-light">
-        <p>&copy; 2024 EcoMisiones. Todos los derechos reservados.</p>
-    </footer>
+    <div th:insert="~{fragments/footer :: footer}"></div>
 
     <!-- Scripts -->
     <div th:insert="~{fragments/scripts :: scripts}"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"></script>
-    <script>
-        // Añadir animación de entrada a las tarjetas
-        document.addEventListener('DOMContentLoaded', function () {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.classList.add('animate__animated', 'animate__fadeInUp');
-            });
-        });
-
-        // Añadir efecto de hover a las tarjetas
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseover', () => {
-                card.classList.add('shadow-lg');
-            });
-            card.addEventListener('mouseout', () => {
-                card.classList.remove('shadow-lg');
-            });
-        });
-    </script>
 </body>
 
 </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+
+        <!-- Formulario de filtrado de productos -->
+        <form method="get" th:action="@{/producto/filtrar}">
+            <div class="row">
+                <!-- Categoría -->
+                <div class="col-md-4 mb-3">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select id="categoria" name="categoria" class="form-select">
+                        <option value="" disabled selected>Seleccione una Categoría</option>
+                        <th:block th:each="entry : ${categorias}">
+                            <!-- Categorías principales -->
+                            <option th:value="${entry.key.id}" th:text="${entry.key.nombre}" class="text-bg-light"
+                                disabled></option>
+                            <th:block th:each="subcategoria : ${entry.value}">
+                                <!-- Subcategorías -->
+                                <option th:selected="${subcategoria.id == categoria?.id}" th:value="${subcategoria.id}" th:text="'➧ ' + ${subcategoria.nombre}"></option>
+                            </th:block>
+                        </th:block>
+                    </select>
+                </div>
+
+                <!-- Precio máximo -->
+                <div class="col-md-4 mb-3">
+                    <label for="precio" class="form-label">Precio máximo ($)</label>
+                    <input type="number" class="form-control" id="precio" name="precio" min="1" max="1000000" th:value="${precio}">
+                </div>
+
+                <!-- Descuento mínimo -->
+                <div class="col-md-4 mb-3">
+                    <label for="descuento" class="form-label">Descuento mínimo (%)</label>
+                    <input type="number" class="form-control" id="descuento" name="descuento" min="1" max="100" th:value="${descuento}">
+                </div>
+            </div>
+
+            <!-- Botón para enviar el formulario -->
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <!-- Resultados de búsqueda -->
+        <div th:if="${busqueda != null}" class="mt-5">
+            <h3>Resultados para: <strong th:text="${busqueda}"></strong></h3>
+        </div>
+
+        <!-- Mensaje cuando no se encuentran resultados -->
+        <div th:if="${filtrados.empty}" class="alert alert-primary alert-dismissible fade show mt-5" role="alert">
+            <p>No se encontró ningún resultado.</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Lista de productos filtrados -->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-5">
+            <div class="col" th:each="producto : ${filtrados}">
+                <!-- Carta de producto -->
+                <div th:insert="~{fragments/cartaProducto :: cartaProducto}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir el footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Incluir scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

@@ -1,13 +1,10 @@
-# 2024 - Programacion Orientado a objetos - Integrador
+# GA - 2024 POO2 - Integrador
 
 # Sistema de Gestión de Productos Ecológicos
 
-
 Bienvenido al sistema de gestión de productos ecológicos en línea. Este proyecto tiene como objetivo proporcionar una plataforma dedicada a la venta y compra de productos ecológicos. El mismo incluye  funcionalidades para clientes y administradores.
 
-
 ---
-
 
 ## Instalación
 
@@ -37,18 +34,18 @@ Bienvenido al sistema de gestión de productos ecológicos en línea. Este proye
    - Reemplaza `tu_usuario` y `tu_contraseña` con tus credenciales de PostgreSQL.
 
 4. **Instalación de Dependencias**
-
  - Abre una terminal y navega hasta el directorio raíz del proyecto.
  - Ejecuta el siguiente comando para instalar todas las dependencias necesarias:
    ```bash
    mvn clean install
    ```
+
 5. **Ejecuta la aplicacion**
     ```bash
    mvn spring-boot:run
    ```
-6. **Acceda al sistema**
 
+6. **Acceda al sistema**
    - Abre un navegador y ve a http://localhost:8080.
   
 ---

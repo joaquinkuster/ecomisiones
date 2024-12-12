@@ -57,8 +57,8 @@ public class Pedido {
     private Boolean baja = false;
 
     public Pedido(double total, double costoEnvio, int diasDeEspera, MedioDePago medioDePago, Sucursal sucursal, Usuario comprador, LocalDate fechaLlegada) {
-        this.total = total;
-        this.costoEnvio = costoEnvio;
+        this.total = Math.round(total * 100.0) / 100.0;
+        this.costoEnvio = Math.round(costoEnvio * 100.0) / 100.0;;
         this.diasDeEspera = diasDeEspera;
         this.medioDePago = medioDePago; 
         this.sucursal = sucursal;

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+    <!-- Navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <h2 class="mb-4 fw-bold">Carrito de Compras</h2>
+
+        <!-- Mensaje de carrito vacío -->
+        <div th:if="${carrito.detalles.empty}" class="alert alert-info mt-5 text-center" role="alert">
+            <p class="text-muted fs-5">Tu carrito está vacío. Agrega productos para continuar con tu compra.</p>
+        </div>
+
+        <!-- Productos en el carrito -->
+        <section th:if="${!carrito.detalles.empty}" class="mt-5">
+            <!-- Lista de productos -->
+            <ul class="list-group mb-4">
+                <li th:each="detalle : ${carrito.detalles}" 
+                    class="list-group-item d-flex justify-content-between align-items-center shadow-sm">
+                    <div>
+                        <strong th:text="${detalle.producto.nombre}"></strong><br>
+                        <span class="text-muted">Precio: $<span th:text="${detalle.producto.precio}"></span></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control me-3" 
+                               id="cantidad" name="cantidad" min="0" 
+                               th:attr="max=${detalle.producto.stock}" 
+                               th:value="${detalle.cantidad}" style="width: 80px;" 
+                               aria-label="Cantidad">
+                        <form th:action="@{/carrito/eliminar/{id}(id=${detalle.producto.id})}" 
+                              method="post" class="mb-0">
+                            <input type="hidden" name="vista" value="carrito">
+                            <button type="submit" class="btn btn-danger btn-sm" aria-label="Eliminar producto">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Total y botón de compra -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Total: <strong>$<span th:text="${total}"></span></strong></h3>
+                <a th:href="@{/pedido/preparar}" class="btn btn-success btn-lg" aria-label="Proceder a la compra">
+                    Comprar
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

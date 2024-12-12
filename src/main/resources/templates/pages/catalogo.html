@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+    <!-- Navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <h2 class="fw-bold">Catálogo de Productos</h2>
+
+        <!-- Mensaje si no hay categorías -->
+        <div th:if="${categorias.empty}" class="alert alert-info text-center mt-5 shadow-sm" role="alert">
+            <p class="text-muted fs-5">No hay categorías registradas.</p>
+        </div>
+
+        <!-- Listado de categorías -->
+        <section th:if="${!categorias.empty}" class="mt-5">
+            <div th:each="entry : ${categorias}">
+                <!-- Categoría principal -->
+                <div class="categoria mb-3 mt-5">
+                    <h3 class="text-center border-bottom border-black border-4 pb-2" th:text="${entry.key.nombre}"></h3>
+                </div>
+
+                <!-- Subcategorías -->
+                <ul class="list-group shadow-sm rounded">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        th:each="subcategoria : ${entry.value}">
+                        <span th:text="${subcategoria.nombre}" class="fw-semibold"></span>
+                        <a class="btn btn-info btn-sm text-white"
+                            th:href="@{'/producto/filtrar?categoria=' + ${subcategoria.id}}"
+                            aria-label="Ver productos en la categoría [[${subcategoria.nombre}]]">
+                            Ver más
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

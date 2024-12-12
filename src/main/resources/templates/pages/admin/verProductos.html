@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head (fragmento con meta, links, etc.) -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+  <!-- Incluir el navbar (barra de navegación) -->
+  <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+  <div class="container mt-5">
+
+    <!-- Título principal -->
+    <h2 class="mb-4 fw-bold">Todos los productos</h2>
+
+    <!-- Mensaje de alerta -->
+    <div th:if="${mensaje != null}" class="alert alert-primary alert-dismissible fade show mt-5" role="alert">
+      <p th:text="${mensaje}"></p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Mensaje si no hay pedidos -->
+    <div th:if="${productos.empty}" class="alert alert-info text-center mt-5 shadow-sm rounded" role="alert">
+      <p class="text-muted fs-5">No hay productos registrados actualmente.</p>
+    </div>
+
+    <!-- Si hay productos, mostrar la tabla -->
+    <div th:if="${!productos.empty}" class="table-responsive mt-5">
+      <table class="table table-striped table-bordered bg-white table-hover">
+        <!-- Cabecera de la tabla con los títulos de las columnas -->
+        <thead>
+          <tr>
+            <th scope="col" class="fw-bold">ID del producto</th>
+            <th scope="col" class="fw-bold">Nombre</th>
+            <th scope="col" class="fw-bold">Descripción</th>
+            <th scope="col" class="fw-bold">Precio</th>
+            <th scope="col" class="fw-bold">Descuento</th>
+            <th scope="col" class="fw-bold">Peso</th>
+            <th scope="col" class="fw-bold">Stock</th>
+            <th scope="col" class="fw-bold">Fecha de creación</th>
+            <th scope="col" class="fw-bold">Categoría</th>
+            <th scope="col" class="fw-bold">Almacén</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="producto : ${productos}">
+            <td th:text="${producto.id}"></td>
+            <td th:text="${producto.nombre}"></td>
+            <td th:text="${producto.descripcion}"></td>
+            <td th:text="${producto.precio}"></td>
+            <td th:text="${producto.descuento}"></td>
+            <td th:text="${producto.peso}"></td>
+            <td th:text="${producto.stock}"></td>
+            <td th:text="${producto.fechaCreacion}"></td>
+            <td th:text="${producto.categoria.nombre}"></td>
+            <td th:text="${producto.almacen}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center mt-5">
+      <!-- Agregar nuevo producto -->
+      <a th:href="@{/admin/agregarProducto}" class="btn btn-primary">Agregar Producto</a>
+    </div>
+  </div>
+
+  <!-- Footer (pie de página) -->
+  <div th:insert="~{fragments/footer :: footer}"></div>
+
+  <!-- Scripts (fragmento de scripts comunes) -->
+  <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

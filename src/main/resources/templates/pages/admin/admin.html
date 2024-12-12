@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Incluir el head -->
+    <div th:insert="~{fragments/head :: head}"></div>
+</head>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+
+        <h2 class="fw-bold mb-4">Gestión de Sistema</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+                <p class="text-center mb-4">Seleccione una opción para gestionar:</p>
+
+                <!-- Botones en línea en pantallas grandes y apilados en pantallas pequeñas -->
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a th-href="#" class="btn btn-primary btn-lg col-12 col-md-5" th:href="@{/admin/verPedidos}">Ver Ventas</a>
+                    <a th:href="@{/admin/verProductos}" class="btn btn-success btn-lg col-12 col-md-5">Gestionar Productos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+
+</body>
+</html>
+

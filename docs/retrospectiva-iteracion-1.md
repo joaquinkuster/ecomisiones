@@ -14,3 +14,5 @@
 - Asegurarnos de decidir desde el inicio las tecnologías que vamos a usar.
 - Mejorar cómo estimamos los tiempos, quizás basándonos en tareas similares o experiencia de otros.
 - Organizar mejor el tiempo para evitar que las otras responsabilidades de la facultad afecten tanto el proyecto.
+
+---

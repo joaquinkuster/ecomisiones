@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+
+        <!-- Título principal -->
+        <h2 class="mb-4 fw-bold">Mis Pedidos</h2>
+
+        <!-- Mensaje si no hay pedidos -->
+        <div th:if="${compras.empty}" class="alert alert-info text-center mt-5 shadow-sm rounded" role="alert">
+            <p class="text-muted fs-5">No tienes pedidos registrados actualmente.</p>
+        </div>
+
+        <!-- Tabla de compras -->
+        <div th:if="${!compras.empty}" class="table-responsive mt-5">
+            <table class="table table-striped table-bordered bg-white table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" class="fw-bold">Compra</th>
+                        <th scope="col" class="fw-bold">Total</th>
+                        <th scope="col" class="fw-bold">Costo Envío</th>
+                        <th scope="col" class="fw-bold">Días de Espera</th>
+                        <th scope="col" class="fw-bold">Fecha de Llegada</th>
+                        <th scope="col" class="fw-bold">Detalles</th>
+                        <th scope="col" class="fw-bold">Medio de Pago</th>
+                        <th scope="col" class="fw-bold">Sucursal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="compra : ${compras}">
+                        <td th:text="${compra}">ID de la compra</td>
+                        <td th:text="'$' + ${compra.total}">Total de la compra</td>
+                        <td th:text="'$' + ${compra.costoEnvio}">Costo envío</td>
+                        <td th:text="${compra.diasDeEspera}">Días de espera</td>
+                        <td th:text="${compra.fechaLlegada}">Fecha de llegada</td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                                <li th:each="detalle : ${compra.detalles}" class="mb-2">
+                                    <span th:text="'Producto: ' + ${detalle.producto} + ' x ' + ${detalle.cantidad}"></span><br>
+                                    <small th:text="'Envío: ' + ${detalle.medioDeEnvio}" class="text-muted"></small>
+                                </li>
+                            </ul>
+                        </td>
+                        <td th:text="${compra.medioDePago.nombre}">Medio de pago</td>
+                        <td th:text="${compra.sucursal}">Sucursal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Incluir el fragmento navbar -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+
+        <!-- Mostrar mensajes si existen -->
+        <div th:if="${mensaje != null}" class="alert alert-primary alert-dismissible fade show" role="alert">
+            <p th:text="${mensaje}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="row">
+            <!-- Columna de imágenes -->
+            <div class="col-lg-6">
+                <!-- Imagen principal con tamaño fijo -->
+                <img th:if="${!imagenes.isEmpty()}" th:src="'data:image/png;base64,' + ${imagenes[0]}"
+                    class="product-image img-fluid mb-3 rounded" id="mainImage" alt="Imagen del producto"
+                    style="height: 500px; object-fit: contain;">
+                <p th:if="${imagenes.isEmpty()}">No hay imágenes disponibles</p>
+
+                <!-- Miniaturas de imágenes -->
+                <div class="d-flex mt-3">
+                    <div th:each="imagen : ${imagenes}" class="me-2">
+                        <img th:src="'data:image/png;base64,' + ${imagen}" class="product-thumbnail rounded shadow-sm"
+                            alt="Imagen miniatura" style="cursor: pointer;"
+                            onclick="document.getElementById('mainImage').src = this.src">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalles del producto -->
+            <div class="col-lg-6">
+                <h3 th:text="${producto.nombre}" class="mb-3 fw-bold"></h3>
+                <p th:text="${producto.descripcion}"></p>
+                <p><strong>Precio:</strong> <span th:text="'$' + ${producto.precio}"></span></p>
+                <p><strong>Descuento:</strong> <span th:text="${producto.descuento} + '%'"></span></p>
+                <p><strong>Precio con descuento:</strong> <span
+                        th:text="'$' + (${producto.precio} * (1 - ${producto.descuento} / 100))"></span></p>
+                <p><strong>Stock:</strong> <span th:text="${producto.stock}"></span></p>
+                <p><strong>Categoría:</strong> <span th:text="${producto.categoria.nombre}"></span></p>
+
+                <!-- Acción para agregar al carrito -->
+                <span
+                    th:with="actionUrl=${!estaEnCarrito} ? '/carrito/agregar/' + ${producto.id} : '/carrito/eliminar/' + ${producto.id}">
+                    <form th:action="@{${actionUrl}}" method="post" id="formularioProducto">
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="cantidad" class="form-label me-3">Cantidad:</label>
+                            <input type="number" class="form-control w-25" id="cantidad" name="cantidad" min="1"
+                                th:attr="max=${producto.stock}" value="1" aria-label="Cantidad del producto">
+                        </div>
+                        <input type="hidden" name="producto" id="producto" th:value="${producto.id}">
+
+                        <!-- Botones -->
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-success me-2 btnComprar" data-url="/pedido/preparar"
+                                aria-label="Comprar este producto">Comprar</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span
+                                    th:text="${!estaEnCarrito ? 'Agregar al carrito' : 'Eliminar del carrito'}"></span>
+                            </button>
+                        </div>
+                    </form>
+                </span>
+            </div>
+        </div>
+
+        <!-- Productos relacionados -->
+        <div th:if="${relacionados.size() >= 3}" class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold">Productos Relacionados</h2>
+                <a class="btn btn-outline-primary btn-sm rounded-pill px-4"
+                    th:href="@{'/producto/filtrar?categoria=' + ${producto.categoria.id}}">
+                    Ver Más
+                </a>
+            </div>
+
+            <!-- Slider con productos relacionados -->
+            <div class="slider d-flex justify-content-center align-items-center" style="min-height: 500px;">
+                <div th:each="producto : ${relacionados}" class="p-3">
+                    <div th:insert="~{fragments/cartaProducto :: cartaProducto}"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+.cartaProducto:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+}
+
+.carousel-indicators .active {
+    background-color: #0056b3;
+}
+
+.product-image {
+    max-height: 400px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.product-thumbnail {
+    max-height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}

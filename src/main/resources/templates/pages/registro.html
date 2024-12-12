@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body class="min-h-screen bg-gray-100 flex justify-center items-center">
+
+    <!-- Contenedor Principal -->
+    <div class="max-w-6xl w-full m-6 bg-white shadow sm:rounded-lg flex flex-col md:flex-row h-auto md:h-[550px]">
+        
+        <!-- Imagen a la izquierda -->
+        <div class="hidden md:flex w-full md:w-1/2 bg-green-100 items-center justify-center">
+            <div class="m-8 bg-contain bg-center bg-no-repeat"
+                style="background-image: url('https://i.imgur.com/QpPFWjs.png'); height: 300px; width: 100%; max-width: 500px;">
+            </div>
+        </div>
+        
+        <!-- Formulario a la derecha -->
+        <div class="w-full md:w-1/2 p-6 sm:p-10 flex flex-col justify-center">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Registro de Cuenta</h2>
+
+            <!-- Formulario de Registro -->
+            <form th:action="@{/registro}" method="post" id="formRegistro" novalidate>
+
+                <!-- Nombre -->
+                <div class="mb-4">
+                    <label for="nombre" class="block text-gray-700 font-semibold">Nombre</label>
+                    <input type="text"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="nombre" name="nombre" placeholder="Inserte su nombre" required>
+                    <p id="nombreError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-4">
+                    <label for="apellido" class="block text-gray-700 font-semibold">Apellido</label>
+                    <input type="text"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="apellido" name="apellido" placeholder="Inserte su apellido" required>
+                    <p id="apellidoError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Correo Electrónico -->
+                <div class="mb-4">
+                    <label for="correo" class="block text-gray-700 font-semibold">Correo Electrónico</label>
+                    <input type="email"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="correo" name="correo" placeholder="prueba@gmail.com" required>
+                    <p id="correoError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-4">
+                    <label for="telefono" class="block text-gray-700 font-semibold">Teléfono</label>
+                    <input type="tel"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="telefono" name="telefono" placeholder="+54 9 11 1234-5678">
+                    <p id="telefonoError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 font-semibold">Contraseña</label>
+                    <input type="password"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="password" name="password" required>
+                    <p id="passwordError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Repetir Contraseña -->
+                <div class="mb-4">
+                    <label for="repetirPassword" class="block text-gray-700 font-semibold">Repetir Contraseña</label>
+                    <input type="password"
+                        class="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="repetirPassword" name="repetirPassword" required>
+                    <p id="repetirPasswordError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Términos y Condiciones -->
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" class="mr-2" id="terminos" required>
+                    <label class="text-sm text-gray-600" for="terminos">
+                        Acepto los <a href="#" class="text-blue-500">Términos y condiciones</a>
+                    </label>
+                    <p id="terminosError" class="text-red-500 text-xs mt-1"></p>
+                </div>
+
+                <!-- Botón de Registro -->
+                <button type="submit"
+                    class="w-full py-3 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                    Registrarse
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts desde un fragmento -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</body>
+
+</html>

@@ -12,3 +12,5 @@
 - Intentar trabajar diseño y funcionalidad en paralelo para no dejar ninguna de lado.
 - Dividir mejor las tareas y los tiempos.
 - Ir mejorando el diseño en pequeñas partes durante cada iteración.
+
+---

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<!-- Incluir el head -->
+<div th:insert="~{fragments/head :: head}"></div>
+
+<body style="background-color: #f0eeee;">
+
+    <!-- Incluir el fragmento navbar dentro de un div -->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+        <h2 class="fw-bold">Preparar Pedido</h2>
+
+        <div class="card mt-5">
+            <div class="card-body">
+
+                <form th:action="@{/pedido/agregar}" method="post" id="formularioPedido">
+
+                    <!-- Input oculto para producto.id -->
+                    <input type="hidden" name="producto" id="producto"
+                        th:value="${producto != null ? producto.id : ''}">
+                    <!-- Input oculto para cantidad -->
+                    <input type="hidden" name="cantidad" id="cantidad" th:value="${cantidad != null ? cantidad : ''}">
+
+                    <!-- Datos del Cliente -->
+                    <div class="mb-4">
+                        <h3 class="h5">Datos del Cliente</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" th:value="${usuario.nombre}" readonly
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellido" class="form-label">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" th:value="${usuario.apellido}" readonly
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="correo" class="form-label">Correo Electrónico</label>
+                                <input type="email" id="correo" name="correo" th:value="${usuario.correo}" readonly
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" id="telefono" name="telefono" th:value="${usuario.telefono}" readonly
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <a th:href="@{/usuario/verPerfil}" class="btn btn-primary mt-3">Actualizar</a>
+                    </div>
+
+                    <!-- Selección de Sucursal -->
+                    <div class="mb-4">
+                        <h3 class="h5">Destino de Envío</h3>
+                        <label for="sucursal" class="form-label">Seleccione una Sucursal</label>
+                        <select id="sucursal" name="sucursal" required class="form-select">
+                            <option value="" th:selected="${usuario.sucursalMasCercana == null}" disabled>Seleccione una
+                                sucursal</option>
+                            <option th:each="sucursal : ${sucursales}" th:value="${sucursal.id}"
+                                th:selected="${sucursal.id == usuario.sucursalMasCercana?.id}" th:text="${sucursal}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Selección de Medio de Pago -->
+                    <div class="mb-4">
+                        <h3 class="h5">Medio de Pago</h3>
+                        <label for="medioPago" class="form-label">Seleccione un Medio de Pago</label>
+                        <select id="medioPago" name="medioPago" required class="form-select">
+                            <option value="" th:selected="${usuario.medioDePagoPredeterminado == null}" disabled>
+                                Seleccione un medio de pago</option>
+                            <option th:each="medio : ${mediosPago}" th:value="${medio.id}"
+                                th:selected="${medio.id == usuario.medioDePagoPredeterminado?.id}"
+                                th:text="${medio.nombre}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Tabla de productos en la orden -->
+                    <div class="mb-4">
+                        <h3 class="h5">Productos en Orden</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="detalle : ${detalles}">
+                                        <td th:text="${detalle.key.nombre}">Nombre</td>
+                                        <td th:text="${detalle.key.precio}">Precio</td>
+                                        <td th:text="${detalle.value}">Cantidad</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="mb-4">
+                        <h3 class="h5">Total</h3>
+                        <p>Total a pagar: <span th:text="${total}"></span></p>
+                    </div>
+
+                    <!-- Mostrar Costo y Días de Espera -->
+                    <div class="mb-4">
+                        <h3 class="h5">Costo y Días de Espera</h3>
+                        <p>Costo de Envío:
+                            <input type="text" name="costoEnvio" id="costoEnvio" th:value="${costoEnvio}" readonly
+                                class="form-control d-inline-block w-auto">
+                        </p>
+                        <p>Días de Espera:
+                            <input type="text" name="diasEspera" id="diasEspera" th:value="${diasEspera}" readonly
+                                class="form-control d-inline-block w-auto">
+                        </p>
+                    </div>
+
+                    <!-- Input oculto para el total -->
+                    <input type="hidden" name="total" id="total" th:value="${total != null ? total : ''}">
+
+                    <!-- Botón de Enviar -->
+                    <button type="submit" class="btn btn-primary w-100">Comprar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer dentro de un div -->
+    <div th:insert="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts dentro de un div -->
+    <div th:insert="~{fragments/scripts :: scripts}"></div>
+
+</body>
+
+</html>

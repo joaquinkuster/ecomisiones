@@ -29,7 +29,8 @@ El proyecto consiste en un sistema de venta en línea de productos ecológicos. 
 #### Desempeño
 - Páginas cargan en menos de 2 segundos y soportan múltiples usuarios simultáneamente.
 
-#### Escalabilidad
+#### Escalabilidad 
+**Corección Clase 06/12/24: No se considera un requisito no funcional**
 - Facilita la adición de productos, categorías y métodos de pago.
 
 #### Usabilidad
@@ -37,6 +38,6 @@ El proyecto consiste en un sistema de venta en línea de productos ecológicos. 
 
 ### 4. Tecnologías Utilizadas
 
-- *Backend:* Spring Boot, Spring Security.
-- *Frontend:* Thymeleaf, HTML5, CSS3, JS.
+- *Backend:* Spring Boot, Spring Security, Thymeleaf.
+- *Frontend:* HTML5, CSS3, JS.
 - *Base de datos:* PostgreSQL.
